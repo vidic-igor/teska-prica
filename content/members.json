@@ -1,10 +1,11 @@
 {
   "items": [
-    { "name": "Lead Vokal",    "role": "Glas / Front",     "img": "img/singer-1.jpg" },
-    { "name": "Prateći Vokal", "role": "Glas",             "img": "img/accordion.jpg" },
-    { "name": "Klavijature",   "role": "Piano / Synth",    "img": "img/piano.jpg" },
-    { "name": "Bas Gitara",    "role": "Bas / Ritam",      "img": "img/bass.jpg" },
-    { "name": "Bubnjevi",      "role": "Drums",            "img": "img/duo.jpg" },
-    { "name": "Harmonika",     "role": "Harmonika / Gost", "img": "img/stage-wide.jpg" }
+    { "name": "Lead Vokal",    "role": "Glas / Front",     "img": "uploads/lead_singer.jpg" },
+    { "name": "Prateći Vokal", "role": "Glas",             "img": "uploads/backup_singer.jpg" },
+    { "name": "Gitara",        "role": "Gitara",           "img": "uploads/guitarist.jpg" },
+    { "name": "Klavijature",   "role": "Piano / Synth",    "img": "uploads/pianist.jpg" },
+    { "name": "Bas Gitara",    "role": "Bas / Ritam",      "img": "uploads/bass_guitar.jpg" },
+    { "name": "Bubnjevi",      "role": "Drums",            "img": "uploads/drummer.jpg" },
+    { "name": "Harmonika",     "role": "Harmonika / Gost", "img": "uploads/harmonica.jpg" }
   ]
 }
