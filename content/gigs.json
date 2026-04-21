@@ -1,0 +1,64 @@
+{
+  "items": [
+    {
+      "d": "19",
+      "m": "APR",
+      "y": "2026",
+      "place": "Jadran",
+      "city": "Subotica",
+      "note": "Prvi solistički koncert · SOLD OUT",
+      "tag": "PAST",
+      "highlight": true
+    },
+    {
+      "d": "02",
+      "m": "MAJ",
+      "y": "2026",
+      "place": "Klub Barutana",
+      "city": "Beograd",
+      "note": "Live night",
+      "tag": "UPCOMING",
+      "highlight": false
+    },
+    {
+      "d": "09",
+      "m": "MAJ",
+      "y": "2026",
+      "place": "Restoran Aquarius",
+      "city": "Novi Sad",
+      "note": "Rezidencija · Subota veče",
+      "tag": "UPCOMING",
+      "highlight": false
+    },
+    {
+      "d": "17",
+      "m": "MAJ",
+      "y": "2026",
+      "place": "Hotel Galleria",
+      "city": "Subotica",
+      "note": "Gala večera",
+      "tag": "UPCOMING",
+      "highlight": false
+    },
+    {
+      "d": "23",
+      "m": "MAJ",
+      "y": "2026",
+      "place": "Lounge 27",
+      "city": "Subotica",
+      "note": "Weekend set",
+      "tag": "UPCOMING",
+      "highlight": false
+    },
+    {
+      "d": "06",
+      "m": "JUN",
+      "y": "2026",
+      "place": "Klub Tesla",
+      "city": "Palić",
+      "note": "Opening night",
+      "tag": "UPCOMING",
+      "highlight": false
+    }
+  ]
+}
