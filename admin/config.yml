@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: vidic-igor/teska-prica
   branch: main
 
 media_folder: uploads

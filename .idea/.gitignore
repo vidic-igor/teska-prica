@@ -8,3 +8,8 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+/modules.xml
+/php.xml
+/inspectionProfiles/Project_Default.xml
+/teska-prica.iml
+/vcs.xml
