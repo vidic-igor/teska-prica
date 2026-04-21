@@ -165,7 +165,7 @@ function Hero() {
           }}>
             <div style={{ maxWidth: 420 }} className="hero-tagline-row">
               <div className="mono" style={{ marginBottom: 8 }}>ZA KLUBOVE · RESTORANE · HOTELE · PRIVATNE DOGAĐAJE</div>
-              <div style={{ fontSize: 18, color: 'var(--fg)' }}>Sedmočlani bend za događaje koji se pamte.</div>
+              <div style={{ fontSize: 18, color: 'var(--fg)' }}>Šestočlani bend za događaje koji se pamte.</div>
             </div>
             <div style={{ display: 'flex', gap: 12 }} className="hero-cta-row">
               <a href="#booking" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
@@ -223,7 +223,7 @@ function About({ settings }) {
               a zvuk mora da bude precizan. Klubovi, restorani, hoteli — mesta gde svaka nota ima težinu.
             </p>
             <div className="grid-stats" style={{ paddingTop: 32, borderTop: '1px solid var(--line)' }}>
-              <Stat n="07" l="Članova benda" />
+              <Stat n="06" l="Članova benda" />
               <Stat n="150+" l="Nastupa / god" />
               <Stat n="01" l="Solistički koncert" />
               <Stat n="100%" l="Uživo, bez playback" />
@@ -290,7 +290,7 @@ function Members({ members }) {
             <div className="section-label">03 — Sastav</div>
             <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>BEND</h2>
           </div>
-          <p className="mono" style={{ maxWidth: 320 }}>SEDMORO MUZIČARA · PUN LIVE SET</p>
+          <p className="mono" style={{ maxWidth: 320 }}>ŠESTORO MUZIČARA · PUN LIVE SET</p>
         </div>
         <div className="grid-3">
           {members.map((m, i) =>
@@ -591,9 +591,6 @@ function Footer({ settings }) {
           <div className="mono">© 2026 TEŠKA PRIČA · SUBOTICA, SRBIJA · ALL RIGHTS RESERVED</div>
           <div style={{ display: 'flex', gap: 24 }} className="mono">
             <a href={`https://instagram.com/${settings.instagram}`}>INSTAGRAM</a>
-            <a href="#">YOUTUBE</a>
-            <a href="#">TIKTOK</a>
-            <a href="#">SPOTIFY</a>
           </div>
         </div>
       </div>
