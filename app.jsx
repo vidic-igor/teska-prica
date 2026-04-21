@@ -13,6 +13,7 @@ const VENUES = [
 /* ============ APP ============ */
 function App() {
   const [content, setContent] = useState(null);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -21,8 +22,17 @@ function App() {
       fetch('/content/settings.json').then(r => r.json()),
     ]).then(([gigsData, membersData, settings]) => {
       setContent({ gigs: gigsData.items, members: membersData.items, settings });
-    }).catch(err => console.error('Failed to load content:', err));
+    }).catch(() => setLoadError(true));
   }, []);
+
+  if (loadError) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif', color: '#8a8e99', textAlign: 'center' }}>
+      <div>
+        <div style={{ fontSize: 48, marginBottom: 16, fontFamily: 'Anton, sans-serif', color: '#ecebe6' }}>TEŠKA PRIČA</div>
+        <p>Greška pri učitavanju sajta. Pokušajte ponovo.</p>
+      </div>
+    </div>
+  );
 
   if (!content) return null;
 
@@ -65,9 +75,8 @@ function Nav() {
 
   return (
     <>
-      <nav data-screen-label="Nav" style={{
+      <nav className="nav" data-screen-label="Nav" style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        padding: '20px 48px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         background: scrolled ? 'rgba(7,8,13,0.85)' : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%)',
         backdropFilter: scrolled ? 'blur(12px)' : 'none',
@@ -452,18 +461,23 @@ function Field({ label, v, on, type = 'text' }) {
 function Booking({ settings }) {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(false);
   const [form, setForm] = useState({ name: '', contact: '', date: '', type: 'Klub / Restoran', city: '', msg: '' });
 
   const submit = (e) => {
     e.preventDefault();
     setSending(true);
+    setSendError(false);
     fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ 'form-name': 'booking', ...form }).toString(),
     })
-      .then(() => { setSent(true); setSending(false); })
-      .catch(() => { setSent(true); setSending(false); });
+      .then(r => {
+        if (!r.ok) throw new Error(r.status);
+        setSent(true); setSending(false);
+      })
+      .catch(() => { setSendError(true); setSending(false); });
   };
 
   return (
@@ -531,7 +545,12 @@ function Booking({ settings }) {
                 placeholder="Prostor, očekivani broj gostiju, trajanje..."
               />
             </label>
-            <button type="submit" className="btn btn-accent" disabled={sending} style={{ marginTop: 32, fontSize: 13, padding: '18px 28px' }}>
+            {sendError && (
+              <p style={{ color: 'oklch(0.68 0.19 25)', fontFamily: 'JetBrains Mono, monospace', fontSize: 11, letterSpacing: '0.14em', marginTop: 16 }}>
+                GREŠKA SLANJA · POKUŠAJTE PONOVO ILI POZOVITE DIREKTNO
+              </p>
+            )}
+            <button type="submit" className="btn btn-accent" disabled={sending} style={{ marginTop: 16, fontSize: 13, padding: '18px 28px' }}>
               {sent ? 'UPIT POSLAT ✓' : sending ? 'SLANJE...' : 'POŠALJI UPIT'} &nbsp;→
             </button>
           </form>
