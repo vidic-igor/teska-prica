@@ -1,0 +1,53 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: uploads
+public_folder: /uploads
+
+collections:
+  - name: content
+    label: Sadržaj sajta
+    files:
+
+      - name: gigs
+        label: Nastupi
+        file: content/gigs.json
+        fields:
+          - name: items
+            label: Nastupi
+            widget: list
+            fields:
+              - { name: d,         label: "Dan (broj)",   widget: string }
+              - { name: m,         label: "Mesec (skr.)", widget: string, hint: "npr. APR, MAJ, JUN" }
+              - { name: y,         label: Godina,         widget: string }
+              - { name: place,     label: Venue,          widget: string }
+              - { name: city,      label: Grad,           widget: string }
+              - { name: note,      label: Napomena,       widget: string }
+              - { name: tag,       label: Status,         widget: select, options: [UPCOMING, PAST] }
+              - { name: highlight, label: Istaknuto,      widget: boolean, default: false }
+
+      - name: members
+        label: "Članovi benda"
+        file: content/members.json
+        fields:
+          - name: items
+            label: "Članovi"
+            widget: list
+            fields:
+              - { name: name, label: Ime,         widget: string }
+              - { name: role, label: Uloga,       widget: string }
+              - { name: img,  label: Fotografija, widget: image }
+
+      - name: settings
+        label: "Podešavanja i kontakt"
+        file: content/settings.json
+        fields:
+          - { name: blurb,     label: "Opis benda",       widget: text }
+          - { name: phone,     label: Telefon,            widget: string }
+          - { name: email,     label: "E-mail",           widget: string }
+          - { name: instagram, label: "Instagram (bez @)", widget: string }
+          - { name: base,      label: "Baza / region",    widget: string }
+          - name: pastVenues
+            label: "Mesta gde smo svirali"
+            widget: list
