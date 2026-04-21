@@ -326,7 +326,7 @@ function Showcase() {
         <div style={{
           position: 'absolute', inset: '-15% 0',
           backgroundImage: "url('img/band-bw.jpg')",
-          backgroundSize: 'cover', backgroundPosition: 'center 75%',
+          backgroundSize: 'cover', backgroundPosition: 'center 25%',
         }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)' }} />
         <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0 }}>
