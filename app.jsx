@@ -1,148 +1,105 @@
 const { useState, useEffect, useRef } = React;
 
-/* ============ DATA ============ */
-const BAND = {
-  name: "Teška Priča",
-  tag: "Live band · Subotica · Serbia",
-  blurb: "Sedmočlani live bend iz Subotice. Sviramo u klubovima, restoranima, hotelima i na privatnim događajima — bez playback-a, sa repertoarom koji podiže salu."
-};
-
-const MEMBERS = [
-{ name: "Lead Vokal", role: "Glas / Front", img: "img/singer-1.jpg" },
-{ name: "Prateći Vokal", role: "Glas", img: "img/accordion.jpg" },
-{ name: "Klavijature", role: "Piano / Synth", img: "img/piano.jpg" },
-{ name: "Bas Gitara", role: "Bas / Ritam", img: "img/bass.jpg" },
-{ name: "Bubnjevi", role: "Drums", img: "img/duo.jpg" },
-{ name: "Harmonika", role: "Harmonika / Gost", img: "img/stage-wide.jpg" }];
-
-
+/* ============ STATIC DATA (never needs CMS editing) ============ */
 const VENUES = [
-{ type: "Klubovi", desc: "Petak i subota veče, rezidencije, special event nights." },
-{ type: "Restorani", desc: "Vikend programi, rezidencije, tematske večeri." },
-{ type: "Hoteli", desc: "Rezidencije, gala večere, sezonski aranžmani." },
-{ type: "Svadbe", desc: "Ceremonija, koktel, veče — pun program uživo." },
-{ type: "Korporativne", desc: "Dočeci, proslave, team-building događaji." },
-{ type: "Privatne proslave", desc: "Rođendani, jubileji, kamerni događaji." }];
-
-
-const GIGS = [
-{ d: "19", m: "APR", y: "2026", place: "Jadran", city: "Subotica", note: "Prvi solistički koncert · SOLD OUT", tag: "PAST", highlight: true },
-{ d: "02", m: "MAJ", y: "2026", place: "Klub Barutana", city: "Beograd", note: "Live night", tag: "UPCOMING" },
-{ d: "09", m: "MAJ", y: "2026", place: "Restoran Aquarius", city: "Novi Sad", note: "Rezidencija · Subota veče", tag: "UPCOMING" },
-{ d: "17", m: "MAJ", y: "2026", place: "Hotel Galleria", city: "Subotica", note: "Gala večera", tag: "UPCOMING" },
-{ d: "23", m: "MAJ", y: "2026", place: "Lounge 27", city: "Subotica", note: "Weekend set", tag: "UPCOMING" },
-{ d: "06", m: "JUN", y: "2026", place: "Klub Tesla", city: "Palić", note: "Opening night", tag: "UPCOMING" }];
-
-
-const PAST = [
-"Jadran, Subotica",
-"Hotel Galleria",
-"Lounge 27",
-"Klub Barutana",
-"Restoran Aquarius",
-"Dvorac Fantast",
-"Letnja Pozornica Palić",
-"Hotel Patria"];
-
-
-/* ============ TWEAKS ============ */
-const MOODS = {
-  midnight: { bg: "#07080d", bg2: "#0d1220", bg3: "#14203a", fg: "#ecebe6", grain: "0.035" },
-  obsidian: { bg: "#050505", bg2: "#0e0e0e", bg3: "#1a1a1a", fg: "#f2efe8", grain: "0.06" },
-  bordeaux: { bg: "#0c0607", bg2: "#1a0c10", bg3: "#2a1217", fg: "#f1e8e4", grain: "0.04" },
-  forest: { bg: "#060a08", bg2: "#0c1613", bg3: "#16261f", fg: "#e8eee8", grain: "0.035" }
-};
-const ACCENTS = {
-  amber: "oklch(0.82 0.14 82)",
-  crimson: "oklch(0.68 0.19 25)",
-  ice: "oklch(0.85 0.10 220)",
-  bone: "oklch(0.92 0.02 80)"
-};
-function applyTweaks(t) {
-  const m = MOODS[t.mood] || MOODS.midnight;
-  const r = document.documentElement;
-  r.style.setProperty('--bg', m.bg);
-  r.style.setProperty('--bg-2', m.bg2);
-  r.style.setProperty('--bg-3', m.bg3);
-  r.style.setProperty('--fg', m.fg);
-  r.style.setProperty('--grain', m.grain);
-  r.style.setProperty('--accent', ACCENTS[t.accent] || ACCENTS.amber);
-}
+  { type: "Klubovi",           desc: "Petak i subota veče, rezidencije, special event nights." },
+  { type: "Restorani",         desc: "Vikend programi, rezidencije, tematske večeri." },
+  { type: "Hoteli",            desc: "Rezidencije, gala večere, sezonski aranžmani." },
+  { type: "Svadbe",            desc: "Ceremonija, koktel, veče — pun program uživo." },
+  { type: "Korporativne",      desc: "Dočeci, proslave, team-building događaji." },
+  { type: "Privatne proslave", desc: "Rođendani, jubileji, kamerni događaji." },
+];
 
 /* ============ APP ============ */
 function App() {
-  const [tweaks, setTweaks] = useState(window.TWEAK_DEFAULTS);
-  const [editMode, setEditMode] = useState(false);
-
-  useEffect(() => {applyTweaks(tweaks);}, [tweaks]);
+  const [content, setContent] = useState(null);
 
   useEffect(() => {
-    const onMsg = (e) => {
-      const d = e.data || {};
-      if (d.type === '__activate_edit_mode') setEditMode(true);
-      if (d.type === '__deactivate_edit_mode') setEditMode(false);
-    };
-    window.addEventListener('message', onMsg);
-    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
-    return () => window.removeEventListener('message', onMsg);
+    Promise.all([
+      fetch('/content/gigs.json').then(r => r.json()),
+      fetch('/content/members.json').then(r => r.json()),
+      fetch('/content/settings.json').then(r => r.json()),
+    ]).then(([gigsData, membersData, settings]) => {
+      setContent({ gigs: gigsData.items, members: membersData.items, settings });
+    }).catch(err => console.error('Failed to load content:', err));
   }, []);
 
-  const update = (patch) => {
-    const next = { ...tweaks, ...patch };
-    setTweaks(next);
-    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: patch }, '*');
-  };
+  if (!content) return null;
+
+  const { gigs, members, settings } = content;
 
   return (
     <>
       <Nav />
-      <Hero layout={tweaks.heroLayout} />
+      <Hero />
       <Marquee />
-      <About />
+      <About settings={settings} />
       <Venues />
-      <Members />
+      <Members members={members} />
       <Showcase />
-      <Gigs />
+      <Gigs gigs={gigs} settings={settings} />
       <Gallery />
-      <Booking />
-      <Footer />
-      {editMode && <Tweaks t={tweaks} update={update} />}
-    </>);
-
+      <Booking settings={settings} />
+      <Footer settings={settings} />
+    </>
+  );
 }
 
 /* ============ NAV ============ */
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', on);return () => window.removeEventListener('scroll', on);
+    window.addEventListener('scroll', on);
+    return () => window.removeEventListener('scroll', on);
   }, []);
-  return (
-    <nav className="nav" data-screen-label="Nav" style={{
-      background: scrolled ? 'rgba(7,8,13,0.85)' : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%)',
-      backdropFilter: scrolled ? 'blur(12px)' : 'none',
-      borderBottom: scrolled ? '1px solid var(--line)' : '1px solid transparent',
-      color: '#ecebe6'
-    }}>
-      <a href="#top" className="nav-logo">TEŠKA&nbsp;PRIČA</a>
-      <div className="nav-links">
-        <a href="#about">O bendu</a>
-        <a href="#venues">Gde sviramo</a>
-        <a href="#members">Sastav</a>
-        <a href="#gigs">Nastupi</a>
-        <a href="#gallery">Galerija</a>
-        <a href="#booking" className="nav-cta">Booking →</a>
-      </div>
-    </nav>);
 
+  const links = [
+    { href: '#about',   label: 'O bendu' },
+    { href: '#venues',  label: 'Gde sviramo' },
+    { href: '#members', label: 'Sastav' },
+    { href: '#gigs',    label: 'Nastupi' },
+    { href: '#gallery', label: 'Galerija' },
+  ];
+
+  return (
+    <>
+      <nav data-screen-label="Nav" style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        padding: '20px 48px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        background: scrolled ? 'rgba(7,8,13,0.85)' : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%)',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        borderBottom: scrolled ? '1px solid var(--line)' : '1px solid transparent',
+        color: '#ecebe6',
+        transition: 'background 0.3s, backdrop-filter 0.3s',
+      }}>
+        <a href="#top" style={{ fontFamily: "'Anton', sans-serif", fontSize: 18, letterSpacing: '0.05em', color: 'inherit', textDecoration: 'none' }}>
+          TEŠKA&nbsp;PRIČA
+        </a>
+        <div className="nav-links">
+          {links.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
+          <a href="#booking" className="nav-cta">Booking →</a>
+        </div>
+        <button className="mobile-menu-btn" onClick={() => setMenuOpen(true)}>MENI</button>
+      </nav>
+      {menuOpen && (
+        <div className="mobile-menu">
+          <button className="mobile-menu-close" onClick={() => setMenuOpen(false)}>✕</button>
+          {links.map(l => <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>)}
+          <a href="#booking" onClick={() => setMenuOpen(false)} style={{ color: 'var(--accent)' }}>Booking →</a>
+        </div>
+      )}
+    </>
+  );
 }
 
 /* ============ HERO ============ */
-function Hero({ layout }) {
-  const bgRef = React.useRef(null);
-  const titleRef = React.useRef(null);
-  React.useEffect(() => {
+function Hero() {
+  const bgRef = useRef(null);
+  const titleRef = useRef(null);
+  useEffect(() => {
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
@@ -156,61 +113,60 @@ function Hero({ layout }) {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
   return (
     <header id="top" data-screen-label="Hero" style={{
       position: 'relative', minHeight: '100vh',
       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-      overflow: 'hidden'
+      overflow: 'hidden',
     }}>
-      {/* Full-bleed photo */}
       <div ref={bgRef} className="hero-bg" style={{
         position: 'absolute', top: -40, left: 0, right: 0, bottom: -80,
-        backgroundImage: `url('img/hero.jpg')`,
+        backgroundImage: "url('img/hero.jpg')",
         backgroundSize: 'cover',
         zIndex: 0,
-        willChange: 'transform'
+        willChange: 'transform',
       }} />
-      {/* gradient overlays */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 40%, rgba(7,8,13,0.6) 75%, var(--bg) 100%)' }} />
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
 
-      {/* Top chrome */}
       <div style={{ position: 'absolute', top: 92, left: 0, right: 0, zIndex: 5 }}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="container top-chrome" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className="mono">● EST. 2024 · SUBOTICA</div>
           <div className="mono">SEZONA 2026 · BOOKING OTVOREN</div>
         </div>
       </div>
 
-      {/* Main name block */}
       <div style={{ position: 'relative', zIndex: 5, paddingBottom: 64 }}>
         <div className="container">
           <div className="mono" style={{ marginBottom: 20, color: 'var(--accent)' }}>LIVE BAND · NO PLAYBACK</div>
           <h1 ref={titleRef} className="display" style={{
             willChange: 'transform',
             letterSpacing: '-0.01em',
-            textAlign: layout === 'centered' ? 'center' : 'left',
-            lineHeight: "1.1", fontSize: "155.968px", height: "311.2px"
+            textAlign: 'left',
+            lineHeight: 1.1,
+            fontSize: 'clamp(80px, 16vw, 200px)',
           }}>
             TEŠKA<br />PRIČA
           </h1>
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-            marginTop: 32, gap: 24, flexWrap: 'wrap', borderTop: '1px solid var(--line)', paddingTop: 24
+            marginTop: 32, gap: 24, flexWrap: 'wrap',
+            borderTop: '1px solid var(--line)', paddingTop: 24,
           }}>
-            <div style={{ maxWidth: 420 }}>
+            <div style={{ maxWidth: 420 }} className="hero-tagline-row">
               <div className="mono" style={{ marginBottom: 8 }}>ZA KLUBOVE · RESTORANE · HOTELE · PRIVATNE DOGAĐAJE</div>
               <div style={{ fontSize: 18, color: 'var(--fg)' }}>Sedmočlani bend za događaje koji se pamte.</div>
             </div>
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ display: 'flex', gap: 12 }} className="hero-cta-row">
               <a href="#booking" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
               <a href="#gallery" className="btn">Pogledajte uživo</a>
             </div>
           </div>
         </div>
       </div>
-    </header>);
-
+    </header>
+  );
 }
 
 /* ============ MARQUEE ============ */
@@ -222,21 +178,21 @@ function Marquee() {
     <section className="marquee" style={{ padding: '28px 0', borderBottom: '1px solid var(--line)' }}>
       <div className="marquee-track">
         {content.map((w, i) =>
-        <span key={i} className="display" style={{
-          fontSize: w === SEP ? 'clamp(18px, 2.4vw, 32px)' : 'clamp(32px, 5vw, 64px)',
-          color: w === SEP ? 'var(--accent)' : 'var(--fg)',
-          opacity: w === SEP ? 0.55 : 0.9,
-          transform: w === SEP ? 'translateY(-8px)' : 'none',
-          letterSpacing: w === SEP ? '0' : '-0.02em'
-        }}>{w}</span>
+          <span key={i} className="display" style={{
+            fontSize: w === SEP ? 'clamp(18px, 2.4vw, 32px)' : 'clamp(32px, 5vw, 64px)',
+            color: w === SEP ? 'var(--accent)' : 'var(--fg)',
+            opacity: w === SEP ? 0.55 : 0.9,
+            transform: w === SEP ? 'translateY(-8px)' : 'none',
+            letterSpacing: w === SEP ? '0' : '-0.02em',
+          }}>{w}</span>
         )}
       </div>
-    </section>);
-
+    </section>
+  );
 }
 
 /* ============ ABOUT ============ */
-function About() {
+function About({ settings }) {
   return (
     <section id="about" style={{ padding: '140px 0' }} data-screen-label="About">
       <div className="container">
@@ -250,7 +206,7 @@ function About() {
           </div>
           <div>
             <p style={{ fontSize: 22, lineHeight: 1.5, marginBottom: 28, maxWidth: 580 }}>
-              {BAND.blurb}
+              {settings.blurb}
             </p>
             <p style={{ color: 'var(--fg-dim)', maxWidth: 560, marginBottom: 48, fontSize: 17, lineHeight: 1.6 }}>
               Repertoar koji pokriva ex-YU klasike, balkanske hitove, latino i svetski pop —
@@ -266,19 +222,20 @@ function About() {
           </div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
+
 function Stat({ n, l }) {
   return (
     <div>
       <div className="display" style={{ fontSize: 'clamp(36px,4vw,56px)' }}>{n}</div>
       <div className="mono" style={{ marginTop: 6 }}>{l}</div>
-    </div>);
-
+    </div>
+  );
 }
 
-/* ============ VENUES — "Gde sviramo" ============ */
+/* ============ VENUES ============ */
 function Venues() {
   return (
     <section id="venues" style={{ padding: '120px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }} data-screen-label="Venues">
@@ -295,13 +252,14 @@ function Venues() {
         </div>
         <div className="grid-venues" style={{ borderLeft: '1px solid var(--line)', borderTop: '1px solid var(--line)' }}>
           {VENUES.map((v, i) =>
-          <div key={v.type} style={{
-            borderRight: '1px solid var(--line)', borderBottom: '1px solid var(--line)',
-            padding: '40px 32px', background: 'rgba(7,8,13,0.3)',
-            transition: 'background 0.3s'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(7,8,13,0.3)'}>
+            <div key={v.type} style={{
+              borderRight: '1px solid var(--line)', borderBottom: '1px solid var(--line)',
+              padding: '40px 32px', background: 'rgba(7,8,13,0.3)',
+              transition: 'background 0.3s',
+            }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(7,8,13,0.3)'}
+            >
               <div className="mono" style={{ color: 'var(--accent)', marginBottom: 16 }}>0{i + 1}</div>
               <h3 style={{ fontSize: 32, marginBottom: 12 }}>{v.type}</h3>
               <p style={{ color: 'var(--fg-dim)', fontSize: 15, lineHeight: 1.5 }}>{v.desc}</p>
@@ -309,12 +267,12 @@ function Venues() {
           )}
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
 
 /* ============ MEMBERS ============ */
-function Members() {
+function Members({ members }) {
   return (
     <section id="members" style={{ padding: '140px 0' }} data-screen-label="Members">
       <div className="container">
@@ -325,20 +283,20 @@ function Members() {
           </div>
           <p className="mono" style={{ maxWidth: 320 }}>SEDMORO MUZIČARA · PUN LIVE SET</p>
         </div>
-
         <div className="grid-3">
-          {MEMBERS.map((m, i) =>
-          <article key={i} style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', background: '#111' }}>
+          {members.map((m, i) =>
+            <article key={i} style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', background: '#111' }}>
               <img src={m.img} alt={m.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(5%) contrast(1.05)', transition: 'transform 0.6s' }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'} />
+                style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(5%) contrast(1.05)', transition: 'transform 0.6s' }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              />
               <div style={{
-              position: 'absolute', inset: 0,
-
-              display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-              padding: 24, background: "linear-gradient(transparent 40%, rgba(0, 0, 0, 0.85) 100%) 0% 0% / cover"
-            }}>
+                position: 'absolute', inset: 0,
+                display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+                padding: 24,
+                background: 'linear-gradient(transparent 40%, rgba(0,0,0,0.85) 100%)',
+              }}>
                 <div className="mono" style={{ color: 'var(--accent)', marginBottom: 8 }}>{String(i + 1).padStart(2, '0')}</div>
                 <div style={{ fontSize: 24, fontWeight: 500, marginBottom: 4 }}>{m.name}</div>
                 <div className="mono">{m.role}</div>
@@ -347,24 +305,22 @@ function Members() {
           )}
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
 
-/* ============ SHOWCASE (big moment photo) ============ */
+/* ============ SHOWCASE ============ */
 function Showcase() {
   return (
     <section data-screen-label="Showcase" style={{ position: 'relative', padding: '80px 0' }}>
-      <div className="showcase-inner" style={{ position: 'relative', aspectRatio: '21/9', maxHeight: '80vh', overflow: 'hidden' }}>
+      <div className="showcase-inner" style={{ position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: '-15% 0',
           backgroundImage: "url('img/band-bw.jpg')",
           backgroundSize: 'cover', backgroundPosition: 'center',
         }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)' }} />
-        <div style={{
-          position: 'absolute', bottom: 40, left: 0, right: 0
-        }}>
+        <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0 }}>
           <div className="container showcase-text-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24 }}>
             <div>
               <div className="mono" style={{ color: 'var(--accent)', marginBottom: 8 }}>19.04.2026 · JADRAN · SUBOTICA</div>
@@ -378,12 +334,12 @@ function Showcase() {
           </div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
 
 /* ============ GIGS ============ */
-function Gigs() {
+function Gigs({ gigs, settings }) {
   return (
     <section id="gigs" style={{ padding: '120px 0' }} data-screen-label="Gigs">
       <div className="container">
@@ -396,13 +352,13 @@ function Gigs() {
         </div>
 
         <div style={{ borderTop: '1px solid var(--line)' }}>
-          {GIGS.map((g, i) =>
-          <div key={i} className="gig-row" style={{
-            padding: '28px 0',
-            borderBottom: '1px solid var(--line)',
-            alignItems: 'center',
-            background: g.highlight ? 'linear-gradient(90deg, rgba(255,200,100,0.04) 0%, transparent 60%)' : 'transparent'
-          }}>
+          {gigs.map((g, i) =>
+            <div key={i} className="gig-row" style={{
+              padding: '28px 0',
+              borderBottom: '1px solid var(--line)',
+              alignItems: 'center',
+              background: g.highlight ? 'linear-gradient(90deg, rgba(255,200,100,0.04) 0%, transparent 60%)' : 'transparent',
+            }}>
               <div>
                 <div className="display" style={{ fontSize: 56, lineHeight: 0.9, color: g.highlight ? 'var(--accent)' : 'var(--fg)' }}>{g.d}</div>
                 <div className="mono" style={{ marginTop: 4 }}>{g.m} · {g.y}</div>
@@ -413,37 +369,44 @@ function Gigs() {
               </div>
               <div className="gig-note" style={{ color: 'var(--fg-dim)', fontSize: 14 }}>{g.note}</div>
               <div className="mono gig-tag" style={{
-              padding: '6px 12px', border: '1px solid currentColor',
-              color: g.tag === 'PAST' ? 'var(--fg-dim)' : 'var(--accent)'
-            }}>{g.tag}</div>
+                padding: '6px 12px', border: '1px solid currentColor',
+                color: g.tag === 'PAST' ? 'var(--fg-dim)' : 'var(--accent)',
+              }}>{g.tag}</div>
             </div>
           )}
         </div>
 
-        {/* past venues marquee */}
         <div style={{ marginTop: 80, paddingTop: 40, borderTop: '1px solid var(--line)' }}>
           <div className="mono" style={{ marginBottom: 24 }}>ODABRANA MESTA GDE SMO SVIRALI</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0 40px' }}>
-            {PAST.map((p, i) =>
-            <div key={i} style={{ fontSize: 'clamp(20px, 2.5vw, 32px)', fontFamily: 'Anton, sans-serif', textTransform: 'uppercase', letterSpacing: '0.01em', padding: '8px 0', color: i % 2 === 0 ? 'var(--fg)' : 'var(--fg-dim)' }}>
+            {settings.pastVenues.map((p, i) =>
+              <div key={i} style={{
+                fontSize: 'clamp(20px, 2.5vw, 32px)',
+                fontFamily: "'Anton', sans-serif",
+                textTransform: 'uppercase',
+                letterSpacing: '0.01em',
+                padding: '8px 0',
+                color: i % 2 === 0 ? 'var(--fg)' : 'var(--fg-dim)',
+              }}>
                 {p} <span style={{ color: 'var(--accent)', margin: '0 8px' }}>·</span>
               </div>
             )}
           </div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
 
 /* ============ GALLERY ============ */
 function Gallery() {
   const tiles = [
-  { src: 'img/hero.jpg', span: '1 / span 2', ar: '3/2', label: 'JADRAN · 2026' },
-  { src: 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'LIVE' },
-  { src: 'img/duo.jpg', span: '1 / span 1', ar: '1/1', label: 'BUBNJEVI' },
-  { src: 'img/singer-f.jpg', span: '2 / span 1', ar: '1/1', label: 'BEND' },
-  { src: 'img/singer-2.jpg', span: '3 / span 1', ar: '1/1', label: 'PRATEĆI VOKALI' }];
+    { src: 'img/hero.jpg',     span: '1 / span 2', ar: '3/2', label: 'JADRAN · 2026' },
+    { src: 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'LIVE' },
+    { src: 'img/duo.jpg',      span: '1 / span 1', ar: '1/1', label: 'BUBNJEVI' },
+    { src: 'img/singer-f.jpg', span: '2 / span 1', ar: '1/1', label: 'BEND' },
+    { src: 'img/singer-2.jpg', span: '3 / span 1', ar: '1/1', label: 'PRATEĆI VOKALI' },
+  ];
 
   return (
     <section id="gallery" style={{ padding: '120px 0', background: 'var(--bg-2)' }} data-screen-label="Gallery">
@@ -457,24 +420,51 @@ function Gallery() {
         </div>
         <div className="grid-3">
           {tiles.map((t, i) =>
-          <div key={i} className={`gallery-tile ${i===0 ? 'gallery-tile-wide':''}`} style={{ gridColumn: t.span, aspectRatio: t.ar, position: 'relative', overflow: 'hidden', background: '#111' }}>
+            <div key={i} className={`gallery-tile ${i === 0 ? 'gallery-tile-wide' : ''}`} style={{ gridColumn: t.span, aspectRatio: t.ar, position: 'relative', overflow: 'hidden', background: '#111' }}>
               <img src={t.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s' }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'} />
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              />
               <div style={{ position: 'absolute', bottom: 16, left: 16 }} className="mono">{t.label}</div>
             </div>
           )}
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
 
 /* ============ BOOKING ============ */
-function Booking() {
+const INP_STYLE = {
+  width: '100%', background: 'transparent', border: 0, color: 'var(--fg)',
+  fontSize: 19, padding: '8px 0', fontFamily: 'Inter', outline: 'none',
+};
+
+function Field({ label, v, on, type = 'text' }) {
+  return (
+    <label style={{ display: 'block', padding: '22px 0', borderBottom: '1px solid var(--line)' }}>
+      <div className="mono">{label}</div>
+      <input type={type} required value={v} onChange={(e) => on(e.target.value)} style={INP_STYLE} />
+    </label>
+  );
+}
+
+function Booking({ settings }) {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [form, setForm] = useState({ name: '', contact: '', date: '', type: 'Klub / Restoran', city: '', msg: '' });
-  const submit = (e) => {e.preventDefault();setSent(true);setTimeout(() => setSent(false), 4000);};
+
+  const submit = (e) => {
+    e.preventDefault();
+    setSending(true);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ 'form-name': 'booking', ...form }).toString(),
+    })
+      .then(() => { setSent(true); setSending(false); })
+      .catch(() => { setSent(true); setSending(false); });
+  };
 
   return (
     <section id="booking" style={{ padding: '140px 0', borderTop: '1px solid var(--line)', background: 'var(--bg)' }} data-screen-label="Booking">
@@ -487,91 +477,79 @@ function Booking() {
         <div className="grid-booking">
           <div>
             <p style={{ fontSize: 19, color: 'var(--fg)', marginBottom: 40, maxWidth: 420, lineHeight: 1.5 }}>
-              Pišite nam o vašem prostoru ili događaju. Odgovaramo u roku od <span style={{ color: 'var(--accent)' }}>24 sata</span> sa
-              slobodnim terminima, formatima postave i ponudom.
+              Pišite nam o vašem prostoru ili događaju. Odgovaramo u roku od{' '}
+              <span style={{ color: 'var(--accent)' }}>24 sata</span> sa slobodnim terminima,
+              formatima postave i ponudom.
             </p>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: 32, paddingTop: 32, borderTop: '1px solid var(--line)' }}>
               <div>
                 <div className="mono">BOOKING</div>
-                <a href="tel:+381613821712" style={{ fontSize: 26, display: 'block', marginTop: 6 }}>+381 61 3821 712</a>
+                <a href={`tel:${settings.phone.replace(/\s/g, '')}`} style={{ fontSize: 26, display: 'block', marginTop: 6 }}>{settings.phone}</a>
               </div>
               <div>
                 <div className="mono">E-MAIL</div>
-                <a href="mailto:booking@teskaprica.rs" style={{ fontSize: 26, display: 'block', marginTop: 6 }}>booking@teskaprica.rs</a>
+                <a href={`mailto:${settings.email}`} style={{ fontSize: 26, display: 'block', marginTop: 6 }}>{settings.email}</a>
               </div>
               <div>
                 <div className="mono">INSTAGRAM</div>
-                <a href="https://instagram.com/_teska_prica" style={{ fontSize: 26, display: 'block', marginTop: 6 }}>@_teska_prica</a>
+                <a href={`https://instagram.com/${settings.instagram}`} style={{ fontSize: 26, display: 'block', marginTop: 6 }}>@{settings.instagram}</a>
               </div>
               <div style={{ paddingTop: 24, borderTop: '1px solid var(--line)' }}>
                 <div className="mono">BAZA</div>
-                <div style={{ fontSize: 18, marginTop: 6 }}>Subotica, Srbija · Nastupamo širom regiona</div>
+                <div style={{ fontSize: 18, marginTop: 6 }}>{settings.base}</div>
               </div>
             </div>
           </div>
 
           <form onSubmit={submit}>
-            <Field label="IME / KONTAKT OSOBA" v={form.name} on={(v) => setForm({ ...form, name: v })} />
-            <Field label="TELEFON ILI E-MAIL" v={form.contact} on={(v) => setForm({ ...form, contact: v })} />
+            <input type="hidden" name="form-name" value="booking" />
+            <input type="hidden" name="bot-field" />
+            <Field label="IME / KONTAKT OSOBA"  v={form.name}    on={(v) => setForm({ ...form, name: v })} />
+            <Field label="TELEFON ILI E-MAIL"   v={form.contact} on={(v) => setForm({ ...form, contact: v })} />
             <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, borderBottom: '1px solid var(--line)' }}>
               <label style={{ padding: '22px 0' }}>
                 <div className="mono">DATUM</div>
-                <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })}
-                style={inpStyle} />
+                <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} style={INP_STYLE} />
               </label>
               <label className="form-col-2" style={{ padding: '22px 0', borderLeft: '1px solid var(--line)', paddingLeft: 20 }}>
                 <div className="mono">GRAD</div>
-                <input type="text" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })}
-                style={inpStyle} placeholder="npr. Beograd" />
+                <input type="text" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} style={INP_STYLE} placeholder="npr. Beograd" />
               </label>
             </div>
             <label style={{ display: 'block', padding: '22px 0', borderBottom: '1px solid var(--line)' }}>
               <div className="mono">TIP DOGAĐAJA</div>
-              <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} style={inpStyle}>
-                {['Klub / Restoran', 'Hotel / Rezidencija', 'Svadba', 'Korporativna proslava', 'Privatni događaj', 'Koncert / Festival', 'Ostalo'].map((o) =>
-                <option key={o} style={{ background: 'var(--bg-2)' }}>{o}</option>)}
+              <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} style={INP_STYLE}>
+                {['Klub / Restoran', 'Hotel / Rezidencija', 'Svadba', 'Korporativna proslava', 'Privatni događaj', 'Koncert / Festival', 'Ostalo'].map(o =>
+                  <option key={o} style={{ background: 'var(--bg-2)' }}>{o}</option>
+                )}
               </select>
             </label>
             <label style={{ display: 'block', padding: '22px 0', borderBottom: '1px solid var(--line)' }}>
               <div className="mono">DETALJI</div>
               <textarea rows={4} value={form.msg} onChange={(e) => setForm({ ...form, msg: e.target.value })}
-              style={{ ...inpStyle, resize: 'vertical', fontSize: 17 }} placeholder="Prostor, očekivani broj gostiju, trajanje..." />
+                style={{ ...INP_STYLE, resize: 'vertical', fontSize: 17 }}
+                placeholder="Prostor, očekivani broj gostiju, trajanje..."
+              />
             </label>
-            <button type="submit" className="btn btn-accent" style={{ marginTop: 32, fontSize: 13, padding: '18px 28px' }}>
-              {sent ? 'UPIT POSLAT ✓' : 'POŠALJI UPIT'} &nbsp;→
+            <button type="submit" className="btn btn-accent" disabled={sending} style={{ marginTop: 32, fontSize: 13, padding: '18px 28px' }}>
+              {sent ? 'UPIT POSLAT ✓' : sending ? 'SLANJE...' : 'POŠALJI UPIT'} &nbsp;→
             </button>
           </form>
         </div>
       </div>
-    </section>);
-
-}
-
-const inpStyle = {
-  width: '100%', background: 'transparent', border: 0, color: 'var(--fg)',
-  fontSize: 19, padding: '8px 0', fontFamily: 'Inter', outline: 'none'
-};
-
-function Field({ label, v, on, type = 'text' }) {
-  return (
-    <label style={{ display: 'block', padding: '22px 0', borderBottom: '1px solid var(--line)' }}>
-      <div className="mono">{label}</div>
-      <input type={type} required value={v} onChange={(e) => on(e.target.value)} style={inpStyle} />
-    </label>);
-
+    </section>
+  );
 }
 
 /* ============ FOOTER ============ */
-function Footer() {
+function Footer({ settings }) {
   return (
     <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--line)', background: 'var(--bg-2)' }}>
       <div className="container">
-        <div className="display footer-display" style={{ fontSize: 'clamp(80px, 20vw, 340px)', letterSpacing: '-0.02em', marginBottom: 48, lineHeight: "1.15" }}>
+        <div className="display footer-display" style={{ fontSize: 'clamp(80px, 20vw, 340px)', letterSpacing: '-0.02em', marginBottom: 48, lineHeight: 1.15 }}>
           TEŠKA<br /><span style={{ paddingLeft: '0.5em' }}>PRIČA</span>
         </div>
 
-        {/* Partners strip */}
         <div style={{ paddingTop: 32, paddingBottom: 40, borderTop: '1px solid var(--line)' }}>
           <div className="mono" style={{ color: 'var(--fg-dim)', marginBottom: 24, textAlign: 'center', letterSpacing: '0.22em' }}>
             PRIJATELJI &amp; PARTNERI
@@ -579,58 +557,29 @@ function Footer() {
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 'clamp(32px, 6vw, 72px)' }}>
             <img src="img/partner-univerexport.webp" alt="Univerexport"
               style={{ height: 'clamp(28px, 4vw, 44px)', width: 'auto', opacity: 0.7, filter: 'grayscale(100%) brightness(1.1)', transition: 'opacity 0.2s, filter 0.2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.filter = 'grayscale(0%) brightness(1)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.filter = 'grayscale(100%) brightness(1.1)'; }} />
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.filter = 'grayscale(0%)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.filter = 'grayscale(100%) brightness(1.1)'; }}
+            />
             <img src="img/partner-doncafe.png" alt="Don Café"
               style={{ height: 'clamp(36px, 5vw, 56px)', width: 'auto', opacity: 0.7, filter: 'grayscale(100%) brightness(1.1)', transition: 'opacity 0.2s, filter 0.2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.filter = 'grayscale(0%) brightness(1)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.filter = 'grayscale(100%) brightness(1.1)'; }} />
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.filter = 'grayscale(0%)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.filter = 'grayscale(100%) brightness(1.1)'; }}
+            />
           </div>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, paddingTop: 32, borderTop: '1px solid var(--line)' }}>
           <div className="mono">© 2026 TEŠKA PRIČA · SUBOTICA, SRBIJA · ALL RIGHTS RESERVED</div>
           <div style={{ display: 'flex', gap: 24 }} className="mono">
-            <a href="https://instagram.com/_teska_prica">INSTAGRAM</a>
+            <a href={`https://instagram.com/${settings.instagram}`}>INSTAGRAM</a>
             <a href="#">YOUTUBE</a>
             <a href="#">TIKTOK</a>
             <a href="#">SPOTIFY</a>
           </div>
         </div>
       </div>
-    </footer>);
-
-}
-
-/* ============ TWEAKS ============ */
-function Tweaks({ t, update }) {
-  return (
-    <div className="tweaks open">
-      <h4>Tweaks</h4>
-      <label>MOOD
-        <div className="row">
-          {Object.keys(MOODS).map((k) =>
-          <button key={k} className={`chip ${t.mood === k ? 'active' : ''}`} onClick={() => update({ mood: k })}>{k}</button>
-          )}
-        </div>
-      </label>
-      <label>ACCENT
-        <div className="row">
-          {Object.entries(ACCENTS).map(([k, v]) =>
-          <button key={k} className={`swatch ${t.accent === k ? 'active' : ''}`}
-          style={{ background: v }} onClick={() => update({ accent: k })} title={k} />
-          )}
-        </div>
-      </label>
-      <label>HERO
-        <div className="row">
-          {['left', 'centered'].map((k) =>
-          <button key={k} className={`chip ${t.heroLayout === k ? 'active' : ''}`} onClick={() => update({ heroLayout: k })}>{k}</button>
-          )}
-        </div>
-      </label>
-    </div>);
-
+    </footer>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
