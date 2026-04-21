@@ -46,6 +46,7 @@
 }
 </script>
 
+<link rel="preload" as="image" href="/img/hero.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
@@ -294,9 +295,29 @@
   <textarea name="msg"></textarea>
 </form>
 
+<!-- Static content for SEO crawlers that don't execute JS -->
+<div id="seo-static" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" aria-hidden="true">
+  <h1>Teška Priča — Live Bend</h1>
+  <nav>
+    <a href="#about">O bendu</a>
+    <a href="#venues">Gde sviramo</a>
+    <a href="#members">Sastav</a>
+    <a href="#gigs">Nastupi</a>
+    <a href="#gallery">Galerija</a>
+    <a href="#booking">Booking</a>
+  </nav>
+  <h2>O bendu</h2>
+  <p>Sedmočlani live bend iz Subotice. Nastupamo na venčanjima, korporativnim događajima, klubovima i hotelima — bez playback-a.</p>
+  <h2>Gde sviramo</h2>
+  <h2>Sastav benda</h2>
+  <h2>Raspoled nastupa</h2>
+  <h2>Galerija</h2>
+  <h2>Booking — Zakažite nastup</h2>
+</div>
+
 <div id="root"></div>
 
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
   if (window.netlifyIdentity) {
     window.netlifyIdentity.on("init", user => {

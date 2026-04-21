@@ -2,6 +2,12 @@
   publish = "."
 
 [[redirects]]
+  from   = "https://www.teskaprica.rs/*"
+  to     = "https://teskaprica.rs/:splat"
+  status = 301
+  force  = true
+
+[[redirects]]
   from = "/admin"
   to   = "/admin/index.html"
   status = 200
