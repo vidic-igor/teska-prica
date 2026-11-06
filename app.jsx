@@ -152,7 +152,7 @@ function Hero() {
             willChange: 'transform',
             letterSpacing: '-0.01em',
             textAlign: 'left',
-            lineHeight: 1.1,
+            lineHeight: 1.2,
             fontSize: 'clamp(80px, 16vw, 200px)',
           }}>
             TEŠKA<br />PRIČA
@@ -325,7 +325,7 @@ function Showcase() {
         <div className="grid-showcase" style={{ borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)', padding: '72px 0' }}>
           <div>
             <div className="mono" style={{ color: 'var(--accent)', marginBottom: 14 }}>AKUSTIČNI SASTAV · SUBOTICA</div>
-            <h2 style={{ fontSize: 'clamp(40px, 5vw, 72px)', letterSpacing: '-0.01em', marginBottom: 20 }}>
+            <h2 style={{ fontSize: 'clamp(40px, 5vw, 72px)', letterSpacing: '-0.01em', lineHeight: 1.16, marginBottom: 20 }}>
               Sviraćemo i na<br />vašoj <span style={{ color: 'var(--accent)' }}>proslavi.</span>
             </h2>
             <p className="mono" style={{ maxWidth: 360, lineHeight: 1.8, marginBottom: 36 }}>
@@ -648,7 +648,7 @@ function Footer({ settings }) {
   return (
     <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--line)', background: 'var(--bg-2)' }}>
       <div className="container">
-        <div className="display footer-display" style={{ fontSize: 'clamp(80px, 20vw, 340px)', letterSpacing: '-0.02em', marginBottom: 48, lineHeight: 1.15 }}>
+        <div className="display footer-display" style={{ fontSize: 'clamp(80px, 20vw, 340px)', letterSpacing: '-0.02em', marginBottom: 48, lineHeight: 1.2 }}>
           TEŠKA<br /><span style={{ paddingLeft: '0.5em' }}>PRIČA</span>
         </div>
 
