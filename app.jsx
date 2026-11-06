@@ -348,6 +348,22 @@ const MESECI = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', '
 
 /* Derives UPCOMING/PAST and the display date from the stored ISO date,
    so the schedule stays correct without anyone editing it. */
+/* Opens the visitor's map app at the venue. Uses the pin dropped in the CMS
+   when there is one, otherwise searches by name and city — so the link works
+   before anyone has filled in a single coordinate. */
+function mapUrlFor(name, city, location) {
+  let coords = '';
+  try {
+    const g = typeof location === 'string' ? JSON.parse(location) : location;
+    if (g && g.type === 'Point' && Array.isArray(g.coordinates)) {
+      const [lng, lat] = g.coordinates;            // GeoJSON order is [lng, lat]
+      if (Number.isFinite(lat) && Number.isFinite(lng)) coords = lat + ',' + lng;
+    }
+  } catch (e) { /* unparseable pin — fall back to the text search */ }
+  const q = coords || [name, city].filter(Boolean).join(', ');
+  return q ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : '';
+}
+
 function prepareGigs(gigs, venues) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -364,6 +380,8 @@ function prepareGigs(gigs, venues) {
       ...g,
       place: v ? v.name : (g.venue || g.place || ''),
       city: v ? v.city : (g.city || ''),
+      address: v ? (v.address || '') : '',
+      mapUrl: mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.location),
       dt,
       past: dt ? dt < today : false,
       d: dt ? String(dt.getDate()).padStart(2, '0') : '--',
@@ -408,7 +426,12 @@ function Gigs({ gigs, settings, venues }) {
               </div>
               <div>
                 <div style={{ fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{g.place}</div>
-                <div className="mono">{(g.city || '').toUpperCase()}</div>
+                <div className="mono">{[(g.city || '').toUpperCase(), g.address].filter(Boolean).join(' · ')}</div>
+                {g.mapUrl &&
+                  <a className="mono" href={g.mapUrl} target="_blank" rel="noopener noreferrer"
+                    style={{ display: 'inline-block', marginTop: 10, color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: 4 }}>
+                    Kako doći ↗
+                  </a>}
               </div>
               <div className="gig-note" style={{ color: 'var(--fg-dim)', fontSize: 14 }}>{g.note}</div>
               <div className="mono gig-tag" style={{

@@ -22,6 +22,17 @@ collections:
             fields:
               - { name: name, label: "Naziv mesta", widget: string }
               - { name: city, label: "Grad",        widget: string }
+              - name: address
+                label: "Adresa"
+                widget: string
+                required: false
+                hint: "Opciono. Prikazuje se uz grad u rasporedu."
+              - name: location
+                label: "Lokacija na mapi"
+                widget: map
+                type: Point
+                required: false
+                hint: "Opciono. Klikni na mapu da postaviš pin. Bez pina link vodi na pretragu po nazivu i gradu." 
 
       - name: gigs
         label: Nastupi
