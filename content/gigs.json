@@ -7,33 +7,57 @@
       "highlight": true
     },
     {
-      "date": "2026-05-02",
-      "venue": "Klub Barutana",
-      "note": "Live night",
+      "date": "2026-08-28",
+      "venue": "Picerija Don",
+      "note": "",
       "highlight": false
     },
     {
-      "date": "2026-05-09",
-      "venue": "Restoran Aquarius",
-      "note": "Rezidencija · Subota veče",
+      "date": "2026-08-29",
+      "venue": "Barel Pub",
+      "note": "",
       "highlight": false
     },
     {
-      "date": "2026-05-17",
-      "venue": "Hotel Galleria",
-      "note": "Gala večera",
+      "date": "2026-09-04",
+      "venue": "Klub Cinema",
+      "note": "",
       "highlight": false
     },
     {
-      "date": "2026-05-23",
-      "venue": "Lounge 27",
-      "note": "Weekend set",
+      "date": "2026-09-05",
+      "venue": "Padrino (Plažni bar)",
+      "note": "",
       "highlight": false
     },
     {
-      "date": "2026-06-06",
-      "venue": "Klub Tesla",
-      "note": "Opening night",
+      "date": "2026-09-12",
+      "place": "Privatna proslava",
+      "note": "",
+      "highlight": false
+    },
+    {
+      "date": "2026-09-18",
+      "venue": "Centar Caffe",
+      "note": "",
+      "highlight": false
+    },
+    {
+      "date": "2026-09-19",
+      "venue": "Priča Caffe",
+      "note": "",
+      "highlight": false
+    },
+    {
+      "date": "2026-09-25",
+      "place": "Privatna proslava",
+      "note": "",
+      "highlight": false
+    },
+    {
+      "date": "2026-09-26",
+      "place": "Privatna proslava",
+      "note": "",
       "highlight": false
     }
   ]

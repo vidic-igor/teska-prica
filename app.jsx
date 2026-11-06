@@ -380,7 +380,8 @@ function prepareGigs(gigs, venues) {
       city: v ? v.city : (g.city || ''),
       address: v ? (v.address || '') : '',
       phone: v ? (v.phone || '') : '',
-      mapUrl: mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.address, v && v.mapUrl),
+      /* a private booking has no venue and no city — nothing to point a map at */
+      mapUrl: (v || g.city) ? mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.address, v && v.mapUrl) : '',
       dt,
       past: dt ? dt < today : false,
       d: dt ? String(dt.getDate()).padStart(2, '0') : '--',

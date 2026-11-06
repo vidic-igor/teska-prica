@@ -7,36 +7,39 @@
       "mapUrl": "https://maps.app.goo.gl/EfKFCJ57A8AymAwWA"
     },
     {
-      "name": "Hotel Galleria",
-      "city": "Subotica"
+      "name": "Picerija Don",
+      "city": "Subotica",
+      "address": "Lovre Bračuljevića 17",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Picerija+Don+Subotica&query_place_id=ChIJKV_vSCphQ0cRKJyXDhHcRsI"
     },
     {
-      "name": "Hotel Patria",
-      "city": "Subotica"
+      "name": "Barel Pub",
+      "city": "Kula",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Barel+Pub+Kula"
     },
     {
-      "name": "Lounge 27",
-      "city": "Subotica"
+      "name": "Klub Cinema",
+      "city": "Kula",
+      "address": "Lenjinova 14",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Club+Cinema+Kula&query_place_id=ChIJ4-WHB_BXW0cR3xeLFNoq03o"
     },
     {
-      "name": "Klub Barutana",
-      "city": "Beograd"
+      "name": "Padrino (Plažni bar)",
+      "city": "Bačka Topola",
+      "address": "Salaš 14",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Plazni+Bar+Padrino+Backa+Topola&query_place_id=ChIJM9RCWwGpREcRYw_GIrhl-qQ"
     },
     {
-      "name": "Restoran Aquarius",
-      "city": "Novi Sad"
+      "name": "Centar Caffe",
+      "city": "Subotica",
+      "address": "Dimitrija Tucovića 2",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Centar+Caffe+024+Subotica&query_place_id=ChIJpeziDgBnQ0cRWDMmDQIn6eQ"
     },
     {
-      "name": "Klub Tesla",
-      "city": "Palić"
-    },
-    {
-      "name": "Letnja Pozornica",
-      "city": "Palić"
-    },
-    {
-      "name": "Dvorac Fantast",
-      "city": "Bečej"
+      "name": "Priča Caffe",
+      "city": "Bačka Topola",
+      "address": "Glavna 37",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Prica+caffe+Backa+Topola&query_place_id=ChIJyaWnRgCrREcRfEGYwBL4Fdc"
     }
   ]
 }
