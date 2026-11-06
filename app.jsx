@@ -75,14 +75,12 @@ function Nav() {
 
   return (
     <>
+      <div className={'nav-scrim' + (scrolled ? ' is-scrolled' : '')} aria-hidden="true" />
       <nav className="nav" data-screen-label="Nav" style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        background: scrolled ? 'rgba(7,8,13,0.85)' : 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%)',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--line)' : '1px solid transparent',
+        background: 'transparent',
         color: '#ecebe6',
-        transition: 'background 0.3s, backdrop-filter 0.3s',
       }}>
         <a href="#top" style={{ fontFamily: "'Anton', sans-serif", fontSize: 18, letterSpacing: '0.05em', color: 'inherit', textDecoration: 'none' }}>
           TEŠKA&nbsp;PRIČA
@@ -218,9 +216,9 @@ function About({ settings, members }) {
               {settings.blurb}
             </p>
             <p style={{ color: 'var(--fg-dim)', maxWidth: 560, marginBottom: 48, fontSize: 17, lineHeight: 1.6 }}>
-              Repertoar koji pokriva ex-YU klasike, balkanske hitove, latino i svetski pop —
-              uvek u aranžmanima koje bend pravi sam. Naš fokus su prostori gde publika sedi blizu,
-              a zvuk mora da bude precizan. Klubovi, restorani, hoteli — mesta gde svaka nota ima težinu.
+              Repertoar pokriva ex-YU klasike i balkanske hitove — uvek u aranžmanima
+              koje bend pravi sam. Negde publika sedi za stolom, negde se igra do jutra.
+              U oba slučaja zvuk mora da bude precizan.
             </p>
             <div className="grid-stats" style={{ paddingTop: 32, borderTop: '1px solid var(--line)' }}>
               <Stat n={String((members || []).length).padStart(2, '0')} l="Članova benda" />
@@ -255,8 +253,8 @@ function Venues() {
             <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>FORMAT<br />NASTUPA</h2>
           </div>
           <p style={{ maxWidth: 360, color: 'var(--fg-dim)' }}>
-            Postava, trajanje i repertoar se prilagođavaju prostoru. Od akustičnog dua
-            za kamerne prostore do punog sastava benda.
+            Sviramo u stalnoj postavi — dva vokala, gitara i bubnjevi.
+            Trajanje i repertoar se prilagođavaju prostoru.
           </p>
         </div>
         <div className="grid-venues" style={{ borderLeft: '1px solid var(--line)', borderTop: '1px solid var(--line)' }}>
@@ -524,8 +522,8 @@ function Booking({ settings }) {
           <div>
             <p style={{ fontSize: 19, color: 'var(--fg)', marginBottom: 40, maxWidth: 420, lineHeight: 1.5 }}>
               Pišite nam o vašem prostoru ili događaju. Odgovaramo u roku od{' '}
-              <span style={{ color: 'var(--accent)' }}>24 sata</span> sa slobodnim terminima,
-              formatima postave i ponudom.
+              <span style={{ color: 'var(--accent)' }}>24 sata</span> sa slobodnim terminima
+              i ponudom.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 32, paddingTop: 32, borderTop: '1px solid var(--line)' }}>
               <div>
