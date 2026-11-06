@@ -390,14 +390,20 @@ function prepareGigs(gigs, venues) {
     };
   });
 
-  const upcoming = rows.filter(r => !r.past).sort((a, b) => (a.dt && b.dt ? a.dt - b.dt : 0));
-  const past = rows.filter(r => r.past).sort((a, b) => b.dt - a.dt);
-  return upcoming.concat(past);
+  return {
+    upcoming: rows.filter(r => !r.past).sort((a, b) => (a.dt && b.dt ? a.dt - b.dt : 0)),
+    past: rows.filter(r => r.past).sort((a, b) => b.dt - a.dt),
+  };
 }
 
+/* How many past gigs show before the list is collapsed. The full history stays
+   on the page as a credential, but it must not bury the booking form. */
+const PAST_VISIBLE = 3;
+
 function Gigs({ gigs, settings, venues }) {
-  const rows = prepareGigs(gigs, venues);
-  const firstPast = rows.findIndex(r => r.past);
+  const { upcoming, past } = prepareGigs(gigs, venues);
+  const [showAllPast, setShowAllPast] = useState(false);
+  const shownPast = showAllPast ? past : past.slice(0, PAST_VISIBLE);
   return (
     <section id="gigs" style={{ padding: '120px 0' }} data-screen-label="Gigs">
       <div className="container">
@@ -410,9 +416,9 @@ function Gigs({ gigs, settings, venues }) {
         </div>
 
         <div style={{ borderTop: '1px solid var(--line)' }}>
-          {rows.map((g, i) =>
+          {upcoming.concat(shownPast).map((g, i) =>
             <React.Fragment key={i}>
-            {i === firstPast && firstPast > 0 &&
+            {g.past && i === upcoming.length && upcoming.length > 0 &&
               <div className="mono" style={{ padding: '36px 0 14px', color: 'var(--fg-mute)' }}>RANIJI NASTUPI</div>}
             <div className="gig-row" style={{
               padding: '28px 0',
@@ -455,6 +461,12 @@ function Gigs({ gigs, settings, venues }) {
             </React.Fragment>
           )}
         </div>
+
+        {past.length > PAST_VISIBLE &&
+          <button className="mono" onClick={() => setShowAllPast(v => !v)}
+            style={{ marginTop: 24, padding: '12px 20px', border: '1px solid var(--line)', color: 'var(--accent)', cursor: 'pointer' }}>
+            {showAllPast ? 'Prikaži manje' : `Prikaži sve nastupe (${past.length})`}
+          </button>}
 
         <div style={{ marginTop: 80, paddingTop: 40, borderTop: '1px solid var(--line)' }}>
           <div className="mono" style={{ marginBottom: 24 }}>ODABRANA MESTA GDE SMO SVIRALI</div>
