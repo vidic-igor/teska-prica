@@ -2,7 +2,7 @@ const { useState, useEffect, useRef } = React;
 
 /* ============ STATIC DATA (never needs CMS editing) ============ */
 const VENUES = [
-  { type: "Klubovi",           desc: "Petak i subota veče, rezidencije, special event nights." },
+  { type: "Klubovi",           desc: "Petak i subota veče, rezidencije, posebne večeri." },
   { type: "Restorani",         desc: "Vikend programi, rezidencije, tematske večeri." },
   { type: "Hoteli",            desc: "Rezidencije, gala večere, sezonski aranžmani." },
   { type: "Svadbe",            desc: "Ceremonija, koktel, veče — pun program uživo." },
@@ -346,7 +346,7 @@ function Showcase() {
 /* ============ GIGS ============ */
 const MESECI = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', 'OKT', 'NOV', 'DEC'];
 
-/* Derives UPCOMING/PAST and the display date from the stored ISO date,
+/* Derives the status and the display date from the stored ISO date,
    so the schedule stays correct without anyone editing it. */
 /* Opens the visitor's map app at the venue. A Google Maps link pasted into the
    catalogue wins — whoever copied it saw the place on screen, so it cannot be
@@ -456,7 +456,7 @@ function Gigs({ gigs, settings, venues }) {
               <div className="mono gig-tag" style={{
                 padding: '6px 12px', border: '1px solid currentColor',
                 color: g.past ? 'var(--fg-dim)' : 'var(--accent)',
-              }}>{g.past ? 'PAST' : 'UPCOMING'}</div>
+              }}>{g.past ? 'ODRŽANO' : 'USKORO'}</div>
             </div>
             </React.Fragment>
           )}
@@ -494,7 +494,7 @@ function Gigs({ gigs, settings, venues }) {
 function Gallery() {
   const tiles = [
     { src: 'img/hero.jpg',     span: '1 / span 2', ar: '3/2', label: 'JADRAN · 2026' },
-    { src: 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'LIVE' },
+    { src: 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'UŽIVO' },
     { src: 'img/duo.jpg',      span: '1 / span 1', ar: '1/1', label: 'BUBNJEVI' },
     { src: 'img/singer-f.jpg', span: '2 / span 1', ar: '1/1', label: 'BEND' },
     { src: 'img/singer-2.jpg', span: '3 / span 1', ar: '1/1', label: 'VOKALI' },
@@ -675,7 +675,7 @@ function Footer({ settings }) {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, paddingTop: 32, borderTop: '1px solid var(--line)' }}>
-          <div className="mono">© 2026 TEŠKA PRIČA · SUBOTICA, SRBIJA · ALL RIGHTS RESERVED</div>
+          <div className="mono">© {new Date().getFullYear()} TEŠKA PRIČA · SUBOTICA, SRBIJA · SVA PRAVA ZADRŽANA</div>
           <div style={{ display: 'flex', gap: 24 }} className="mono">
             <a href={`https://instagram.com/${settings.instagram}`}>INSTAGRAM</a>
           </div>
