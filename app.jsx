@@ -147,7 +147,7 @@ function Hero() {
 
       <div style={{ position: 'relative', zIndex: 5, paddingBottom: 64 }}>
         <div className="container">
-          <div className="mono" style={{ marginBottom: 20, color: 'var(--accent)' }}>AKUSTIČNI BEND · NO PLAYBACK</div>
+          <div className="mono" style={{ marginBottom: 20, color: 'var(--accent)' }}>AKUSTIČNI BEND · SVE UŽIVO</div>
           <h1 ref={titleRef} className="display" style={{
             willChange: 'transform',
             letterSpacing: '-0.01em',
@@ -225,7 +225,7 @@ function About({ settings, members }) {
               <Stat n={String((members || []).length).padStart(2, '0')} l="Članova benda" />
               <Stat n="150+" l="Nastupa / god" />
               <Stat n="01" l="Solistički koncert" />
-              <Stat n="100%" l="Uživo, bez playback" />
+              <Stat n="100%" l="Uživo" />
             </div>
           </div>
         </div>
@@ -329,7 +329,7 @@ function Showcase() {
               Sviraćemo i na<br />vašoj <span style={{ color: 'var(--accent)' }}>proslavi.</span>
             </h2>
             <p className="mono" style={{ maxWidth: 360, lineHeight: 1.8, marginBottom: 36 }}>
-              Dva vokala, gitara i bubnjevi. Bez playback-a.
+              Dva vokala, gitara i bubnjevi.
             </p>
             <a href="#booking" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
           </div>
