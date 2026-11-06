@@ -26,13 +26,7 @@ collections:
                 label: "Adresa"
                 widget: string
                 required: false
-                hint: "Opciono. Prikazuje se uz grad u rasporedu."
-              - name: location
-                label: "Lokacija na mapi"
-                widget: map
-                type: Point
-                required: false
-                hint: "Opciono. Klikni na mapu da postaviš pin. Bez pina link vodi na pretragu po nazivu i gradu." 
+                hint: "Npr. Trg slobode 1. Opciono — bez nje se traži po nazivu i gradu." 
 
       - name: gigs
         label: Nastupi

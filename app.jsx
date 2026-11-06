@@ -348,19 +348,11 @@ const MESECI = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', '
 
 /* Derives UPCOMING/PAST and the display date from the stored ISO date,
    so the schedule stays correct without anyone editing it. */
-/* Opens the visitor's map app at the venue. Uses the pin dropped in the CMS
-   when there is one, otherwise searches by name and city — so the link works
-   before anyone has filled in a single coordinate. */
-function mapUrlFor(name, city, location) {
-  let coords = '';
-  try {
-    const g = typeof location === 'string' ? JSON.parse(location) : location;
-    if (g && g.type === 'Point' && Array.isArray(g.coordinates)) {
-      const [lng, lat] = g.coordinates;            // GeoJSON order is [lng, lat]
-      if (Number.isFinite(lat) && Number.isFinite(lng)) coords = lat + ',' + lng;
-    }
-  } catch (e) { /* unparseable pin — fall back to the text search */ }
-  const q = coords || [name, city].filter(Boolean).join(', ');
+/* Opens the visitor's map app with a search for the venue — the same query a
+   person would type. Name and city alone already resolve; an address in the
+   catalogue makes it exact. */
+function mapUrlFor(name, city, address) {
+  const q = [name, address, city].filter(Boolean).join(', ');
   return q ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : '';
 }
 
@@ -381,7 +373,7 @@ function prepareGigs(gigs, venues) {
       place: v ? v.name : (g.venue || g.place || ''),
       city: v ? v.city : (g.city || ''),
       address: v ? (v.address || '') : '',
-      mapUrl: mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.location),
+      mapUrl: mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.address),
       dt,
       past: dt ? dt < today : false,
       d: dt ? String(dt.getDate()).padStart(2, '0') : '--',
