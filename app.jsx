@@ -348,10 +348,12 @@ const MESECI = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', '
 
 /* Derives UPCOMING/PAST and the display date from the stored ISO date,
    so the schedule stays correct without anyone editing it. */
-/* Opens the visitor's map app with a search for the venue — the same query a
-   person would type. Name and city alone already resolve; an address in the
-   catalogue makes it exact. */
-function mapUrlFor(name, city, address) {
+/* Opens the visitor's map app at the venue. A Google Maps link pasted into the
+   catalogue wins — whoever copied it saw the place on screen, so it cannot be
+   wrong. Otherwise we search the same string a person would type. */
+function mapUrlFor(name, city, address, mapUrl) {
+  const pasted = String(mapUrl || '').trim();
+  if (/^https:\/\//i.test(pasted)) return pasted;
   const q = [name, address, city].filter(Boolean).join(', ');
   return q ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : '';
 }
@@ -373,7 +375,7 @@ function prepareGigs(gigs, venues) {
       place: v ? v.name : (g.venue || g.place || ''),
       city: v ? v.city : (g.city || ''),
       address: v ? (v.address || '') : '',
-      mapUrl: mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.address),
+      mapUrl: mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.address, v && v.mapUrl),
       dt,
       past: dt ? dt < today : false,
       d: dt ? String(dt.getDate()).padStart(2, '0') : '--',

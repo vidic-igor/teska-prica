@@ -26,7 +26,13 @@ collections:
                 label: "Adresa"
                 widget: string
                 required: false
-                hint: "Npr. Trg slobode 1. Opciono — bez nje se traži po nazivu i gradu." 
+                hint: "Npr. Trg slobode 1. Prikazuje se uz grad u rasporedu."
+              - name: mapUrl
+                label: "Link sa Google mapa"
+                widget: string
+                required: false
+                pattern: ['^$|^https://', "Mora počinjati sa https://"]
+                hint: "Najtačnije: nađi mesto na Google mapama → Deli → Kopiraj link → nalepi ovde. Vidiš tačno mesto dok kopiraš, pa greška nije moguća. Bez ovoga se traži po nazivu, adresi i gradu." 
 
       - name: gigs
         label: Nastupi
