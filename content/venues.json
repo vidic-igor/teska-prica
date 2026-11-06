@@ -3,7 +3,8 @@
     {
       "name": "Jadran",
       "city": "Subotica",
-      "address": "trg slobode 1"
+      "address": "",
+      "mapUrl": "https://maps.app.goo.gl/EfKFCJ57A8AymAwWA"
     },
     {
       "name": "Hotel Galleria",
