@@ -147,12 +147,12 @@ function Hero() {
 
       <div style={{ position: 'relative', zIndex: 5, paddingBottom: 64 }}>
         <div className="container">
-          <div className="mono" style={{ marginBottom: 20, color: 'var(--accent)' }}>AKUSTIČNI BEND · SVE UŽIVO</div>
+          <div className="mono" style={{ marginBottom: 48, color: 'var(--accent)' }}>AKUSTIČNI BEND · SVE UŽIVO</div>
           <h1 ref={titleRef} className="display" style={{
             willChange: 'transform',
             letterSpacing: '-0.01em',
             textAlign: 'left',
-            lineHeight: 1.2,
+            lineHeight: 1.1,
             fontSize: 'clamp(80px, 16vw, 200px)',
           }}>
             TEŠKA<br />PRIČA
@@ -648,8 +648,8 @@ function Footer({ settings }) {
   return (
     <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--line)', background: 'var(--bg-2)' }}>
       <div className="container">
-        <div className="display footer-display" style={{ fontSize: 'clamp(80px, 20vw, 340px)', letterSpacing: '-0.02em', marginBottom: 48, lineHeight: 1.2 }}>
-          TEŠKA<br /><span style={{ paddingLeft: '0.5em' }}>PRIČA</span>
+        <div className="display footer-display" style={{ fontSize: 'clamp(40px, 7vw, 96px)', letterSpacing: '-0.01em', marginBottom: 40 }}>
+          TEŠKA PRIČA
         </div>
 
         <div style={{ paddingTop: 32, paddingBottom: 40, borderTop: '1px solid var(--line)' }}>
