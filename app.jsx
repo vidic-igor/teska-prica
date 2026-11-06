@@ -43,7 +43,7 @@ function App() {
       <Nav />
       <Hero />
       <Marquee />
-      <About settings={settings} />
+      <About settings={settings} members={members} />
       <Venues />
       <Members members={members} />
       <Showcase />
@@ -142,13 +142,13 @@ function Hero() {
       <div style={{ position: 'absolute', top: 92, left: 0, right: 0, zIndex: 5 }}>
         <div className="container top-chrome" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className="mono">● EST. 2024 · SUBOTICA</div>
-          <div className="mono">SEZONA 2026 · BOOKING OTVOREN</div>
+          <div className="mono">SEZONA {new Date().getFullYear()} · BOOKING OTVOREN</div>
         </div>
       </div>
 
       <div style={{ position: 'relative', zIndex: 5, paddingBottom: 64 }}>
         <div className="container">
-          <div className="mono" style={{ marginBottom: 20, color: 'var(--accent)' }}>LIVE BAND · NO PLAYBACK</div>
+          <div className="mono" style={{ marginBottom: 20, color: 'var(--accent)' }}>AKUSTIČNI BEND · NO PLAYBACK</div>
           <h1 ref={titleRef} className="display" style={{
             willChange: 'transform',
             letterSpacing: '-0.01em',
@@ -164,8 +164,8 @@ function Hero() {
             borderTop: '1px solid var(--line)', paddingTop: 24,
           }}>
             <div style={{ maxWidth: 420 }} className="hero-tagline-row">
-              <div className="mono" style={{ marginBottom: 8 }}>ZA KLUBOVE · RESTORANE · HOTELE · PRIVATNE DOGAĐAJE</div>
-              <div style={{ fontSize: 18, color: 'var(--fg)' }}>Sedmočlani bend za događaje koji se pamte.</div>
+              <div className="mono" style={{ marginBottom: 8 }}>ZA SVE VRSTE PROSLAVA · KLUBOVE · RESTORANE · HOTELE</div>
+              <div style={{ fontSize: 18, color: 'var(--fg)' }}>Teška priča da ćete se loše provesti uz nas.</div>
             </div>
             <div style={{ display: 'flex', gap: 12 }} className="hero-cta-row">
               <a href="#booking" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
@@ -181,7 +181,7 @@ function Hero() {
 /* ============ MARQUEE ============ */
 function Marquee() {
   const SEP = "◆";
-  const words = ["KLUBOVI", SEP, "RESTORANI", SEP, "HOTELI", SEP, "SVADBE", SEP, "KORPORATIVNO", SEP, "PRIVATNI DOGAĐAJI", SEP];
+  const words = ["PROSLAVE", SEP, "KLUBOVI", SEP, "RESTORANI", SEP, "HOTELI", SEP, "SVADBE", SEP, "KORPORATIVNO", SEP, "PRIVATNI DOGAĐAJI", SEP];
   const content = [...words, ...words, ...words];
   return (
     <section className="marquee" style={{ padding: '28px 0', borderBottom: '1px solid var(--line)' }}>
@@ -201,7 +201,7 @@ function Marquee() {
 }
 
 /* ============ ABOUT ============ */
-function About({ settings }) {
+function About({ settings, members }) {
   return (
     <section id="about" style={{ padding: '140px 0' }} data-screen-label="About">
       <div className="container">
@@ -209,7 +209,7 @@ function About({ settings }) {
           <div className="sticky-col" style={{ position: 'sticky', top: 120 }}>
             <div className="section-label">01 — Bend</div>
             <h2 style={{ fontSize: 'clamp(48px, 6vw, 96px)', letterSpacing: '-0.01em', marginBottom: 24 }}>
-              Live band<br />koji puni<br /><span style={{ color: 'var(--accent)' }}>prostor.</span>
+              Akustični bend<br />koji puni<br /><span style={{ color: 'var(--accent)' }}>prostor.</span>
             </h2>
             <p className="mono">SUBOTICA · SRBIJA · EST. 2024</p>
           </div>
@@ -223,7 +223,7 @@ function About({ settings }) {
               a zvuk mora da bude precizan. Klubovi, restorani, hoteli — mesta gde svaka nota ima težinu.
             </p>
             <div className="grid-stats" style={{ paddingTop: 32, borderTop: '1px solid var(--line)' }}>
-              <Stat n="07" l="Članova benda" />
+              <Stat n={String((members || []).length).padStart(2, '0')} l="Članova benda" />
               <Stat n="150+" l="Nastupa / god" />
               <Stat n="01" l="Solistički koncert" />
               <Stat n="100%" l="Uživo, bez playback" />
@@ -255,8 +255,8 @@ function Venues() {
             <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>FORMAT<br />NASTUPA</h2>
           </div>
           <p style={{ maxWidth: 360, color: 'var(--fg-dim)' }}>
-            Postava, trajanje i repertoar se prilagođavaju prostoru. Od trio formata
-            za kamerne događaje do punog sedmočlanog sastava sa DJ segmentom.
+            Postava, trajanje i repertoar se prilagođavaju prostoru. Od akustičnog dua
+            za kamerne prostore do punog sastava benda.
           </p>
         </div>
         <div className="grid-venues" style={{ borderLeft: '1px solid var(--line)', borderTop: '1px solid var(--line)' }}>
@@ -290,9 +290,9 @@ function Members({ members }) {
             <div className="section-label">03 — Sastav</div>
             <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>BEND</h2>
           </div>
-          <p className="mono" style={{ maxWidth: 320 }}>SEDMORO MUZIČARA · PUN LIVE SET</p>
+          <p className="mono" style={{ maxWidth: 320 }}>AKUSTIČNI SASTAV</p>
         </div>
-        <div className="grid-3">
+        <div className="grid-members">
           {members.map((m, i) =>
             <article key={i} style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', background: '#111' }}>
               <img src={m.img} alt={m.name}
@@ -348,7 +348,35 @@ function Showcase() {
 }
 
 /* ============ GIGS ============ */
+const MESECI = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', 'OKT', 'NOV', 'DEC'];
+
+/* Derives UPCOMING/PAST and the display date from the stored ISO date,
+   so the schedule stays correct without anyone editing it. */
+function prepareGigs(gigs) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const rows = (gigs || []).map(g => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(g.date || '').trim());
+    const dt = m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
+    return {
+      ...g,
+      dt,
+      past: dt ? dt < today : false,
+      d: dt ? String(dt.getDate()).padStart(2, '0') : '--',
+      m: dt ? MESECI[dt.getMonth()] : '',
+      y: dt ? String(dt.getFullYear()) : '',
+    };
+  });
+
+  const upcoming = rows.filter(r => !r.past).sort((a, b) => (a.dt && b.dt ? a.dt - b.dt : 0));
+  const past = rows.filter(r => r.past).sort((a, b) => b.dt - a.dt);
+  return upcoming.concat(past);
+}
+
 function Gigs({ gigs, settings }) {
+  const rows = prepareGigs(gigs);
+  const firstPast = rows.findIndex(r => r.past);
   return (
     <section id="gigs" style={{ padding: '120px 0' }} data-screen-label="Gigs">
       <div className="container">
@@ -361,8 +389,11 @@ function Gigs({ gigs, settings }) {
         </div>
 
         <div style={{ borderTop: '1px solid var(--line)' }}>
-          {gigs.map((g, i) =>
-            <div key={i} className="gig-row" style={{
+          {rows.map((g, i) =>
+            <React.Fragment key={i}>
+            {i === firstPast && firstPast > 0 &&
+              <div className="mono" style={{ padding: '36px 0 14px', color: 'var(--fg-mute)' }}>RANIJI NASTUPI</div>}
+            <div className="gig-row" style={{
               padding: '28px 0',
               borderBottom: '1px solid var(--line)',
               alignItems: 'center',
@@ -379,9 +410,10 @@ function Gigs({ gigs, settings }) {
               <div className="gig-note" style={{ color: 'var(--fg-dim)', fontSize: 14 }}>{g.note}</div>
               <div className="mono gig-tag" style={{
                 padding: '6px 12px', border: '1px solid currentColor',
-                color: g.tag === 'PAST' ? 'var(--fg-dim)' : 'var(--accent)',
-              }}>{g.tag}</div>
+                color: g.past ? 'var(--fg-dim)' : 'var(--accent)',
+              }}>{g.past ? 'PAST' : 'UPCOMING'}</div>
             </div>
+            </React.Fragment>
           )}
         </div>
 
@@ -414,7 +446,7 @@ function Gallery() {
     { src: 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'LIVE' },
     { src: 'img/duo.jpg',      span: '1 / span 1', ar: '1/1', label: 'BUBNJEVI' },
     { src: 'img/singer-f.jpg', span: '2 / span 1', ar: '1/1', label: 'BEND' },
-    { src: 'img/singer-2.jpg', span: '3 / span 1', ar: '1/1', label: 'PRATEĆI VOKALI' },
+    { src: 'img/singer-2.jpg', span: '3 / span 1', ar: '1/1', label: 'VOKALI' },
   ];
 
   return (
@@ -425,7 +457,7 @@ function Gallery() {
             <div className="section-label">05 — Uživo</div>
             <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>GALERIJA</h2>
           </div>
-          <a href="https://instagram.com/_teska_prica" className="mono" style={{ textDecoration: 'underline', textUnderlineOffset: 6 }}>@_TESKA_PRICA ↗</a>
+          <a href="https://instagram.com/_teska_prica_acoustic" className="mono" style={{ textDecoration: 'underline', textUnderlineOffset: 6 }}>@_TESKA_PRICA_ACOUSTIC ↗</a>
         </div>
         <div className="grid-3">
           {tiles.map((t, i) =>

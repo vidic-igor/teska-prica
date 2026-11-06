@@ -18,15 +18,20 @@ collections:
           - name: items
             label: Nastupi
             widget: list
+            summary: "{{fields.date}} — {{fields.place}}, {{fields.city}}"
             fields:
-              - { name: d,         label: "Dan (broj)",   widget: string }
-              - { name: m,         label: "Mesec (skr.)", widget: string, hint: "npr. APR, MAJ, JUN" }
-              - { name: y,         label: Godina,         widget: string }
-              - { name: place,     label: Venue,          widget: string }
-              - { name: city,      label: Grad,           widget: string }
-              - { name: note,      label: Napomena,       widget: string }
-              - { name: tag,       label: Status,         widget: select, options: [UPCOMING, PAST] }
-              - { name: highlight, label: Istaknuto,      widget: boolean, default: false }
+              - name: date
+                label: "Datum nastupa"
+                widget: datetime
+                format: "YYYY-MM-DD"
+                date_format: "DD.MM.YYYY."
+                time_format: false
+                picker_utc: false
+                hint: "Status (UPCOMING / PAST) i redosled se računaju sami iz ovog datuma."
+              - { name: place,     label: Venue,     widget: string }
+              - { name: city,      label: Grad,      widget: string }
+              - { name: note,      label: Napomena,  widget: string }
+              - { name: highlight, label: Istaknuto, widget: boolean, default: false }
 
       - name: members
         label: "Članovi benda"

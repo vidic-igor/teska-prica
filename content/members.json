@@ -1,11 +1,8 @@
 {
   "items": [
-    { "name": "Đole",    "role": "Glas / Front",     "img": "uploads/lead_singer.jpg" },
-    { "name": "Prateći Vokal", "role": "Glas",             "img": "uploads/backup_singer.jpg" },
-    { "name": "Petar",        "role": "Gitara",           "img": "uploads/guitarist.jpg" },
-    { "name": "Klavijature",   "role": "Piano / Synth",    "img": "uploads/pianist.jpg" },
-    { "name": "Bas Gitara",    "role": "Bas / Ritam",      "img": "uploads/bass_guitar.jpg" },
-    { "name": "Bubnjevi",      "role": "Drums",            "img": "uploads/drummer.jpg" },
-    { "name": "Harmonika",     "role": "Harmonika / Gost", "img": "uploads/harmonica.jpg" }
+    { "name": "Đorđe Basarić",   "role": "Vokal",    "img": "uploads/djordje-basaric.jpg" },
+    { "name": "Miona Smiljanić", "role": "Vokal",    "img": "uploads/miona-smiljanic.jpg" },
+    { "name": "Petar Paunović",  "role": "Gitara",   "img": "uploads/petar-paunovic.jpg" },
+    { "name": "Miloš Milin",     "role": "Bubnjevi", "img": "uploads/milos-milin.jpg" }
   ]
 }
