@@ -140,7 +140,7 @@ function Hero() {
 
       <div style={{ position: 'absolute', top: 92, left: 0, right: 0, zIndex: 5 }}>
         <div className="container top-chrome" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="mono">● EST. 2024 · SUBOTICA</div>
+          <div className="mono">● SUBOTICA</div>
           <div className="mono">SEZONA {new Date().getFullYear()} · BOOKING OTVOREN</div>
         </div>
       </div>
@@ -648,11 +648,7 @@ function Footer({ settings }) {
   return (
     <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--line)', background: 'var(--bg-2)' }}>
       <div className="container">
-        <div className="display footer-display" style={{ fontSize: 'clamp(40px, 7vw, 96px)', letterSpacing: '-0.01em', marginBottom: 40 }}>
-          TEŠKA PRIČA
-        </div>
-
-        <div style={{ paddingTop: 32, paddingBottom: 40, borderTop: '1px solid var(--line)' }}>
+        <div style={{ paddingBottom: 40 }}>
           <div className="mono" style={{ color: 'var(--fg-dim)', marginBottom: 24, textAlign: 'center', letterSpacing: '0.22em' }}>
             PRIJATELJI &amp; PARTNERI
           </div>
