@@ -49,7 +49,7 @@ function App() {
       <Members members={members} />
       <Showcase />
       <Gigs gigs={gigs} settings={settings} venues={venues} />
-      <Gallery />
+      <Gallery settings={settings} />
       <Booking settings={settings} />
       <Footer settings={settings} />
     </>
@@ -491,10 +491,58 @@ function Gigs({ gigs, settings, venues }) {
 }
 
 /* ============ GALLERY ============ */
-function Gallery() {
+/* A short silent clip in place of one gallery photo. It costs a poster image
+   until the tile is actually scrolled into view: preload="none" means no video
+   bytes are fetched before then. Sound is off until the viewer asks for it. */
+function VideoTile({ src, poster, label }) {
+  const ref = useRef(null);
+  const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = true;                                  // the attribute alone is unreliable
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) el.play().catch(() => {});
+      else el.pause();
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const toggle = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = !el.muted;
+    setMuted(el.muted);
+    el.play().catch(() => {});
+  };
+
+  return (
+    <>
+      <video ref={ref} src={src} poster={poster} loop playsInline preload="none" muted
+        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      <button onClick={toggle} className="mono" aria-label={muted ? 'Uključi ton' : 'Isključi ton'}
+        style={{
+          position: 'absolute', top: 14, right: 14, zIndex: 2,
+          background: 'rgba(7,8,13,0.72)', border: '1px solid var(--line)',
+          padding: '7px 11px', color: muted ? 'var(--fg)' : 'var(--accent)',
+        }}>
+        {muted ? 'Uključi ton' : 'Ton uključen'}
+      </button>
+    </>
+  );
+}
+
+function Gallery({ settings }) {
+  const video = (settings && settings.video) || '';
   const tiles = [
     { src: 'img/hero.jpg',     span: '1 / span 2', ar: '3/2', label: 'JADRAN · 2026' },
-    { src: 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'UŽIVO' },
+    video
+      ? { video, poster: (settings && settings.videoPoster) || 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'SNIMAK' }
+      : { src: 'img/singer-1.jpg', span: '3 / span 1', ar: '3/4', label: 'UŽIVO' },
     { src: 'img/duo.jpg',      span: '1 / span 1', ar: '1/1', label: 'BUBNJEVI' },
     { src: 'img/singer-f.jpg', span: '2 / span 1', ar: '1/1', label: 'BEND' },
     { src: 'img/singer-2.jpg', span: '3 / span 1', ar: '1/1', label: 'VOKALI' },
@@ -513,10 +561,12 @@ function Gallery() {
         <div className="grid-3">
           {tiles.map((t, i) =>
             <div key={i} className={`gallery-tile ${i === 0 ? 'gallery-tile-wide' : ''}`} style={{ gridColumn: t.span, aspectRatio: t.ar, position: 'relative', overflow: 'hidden', background: '#111' }}>
-              <img src={t.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s' }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-              />
+              {t.video
+                ? <VideoTile src={t.video} poster={t.poster} />
+                : <img src={t.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s' }}
+                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  />}
               <div style={{ position: 'absolute', bottom: 16, left: 16 }} className="mono">{t.label}</div>
             </div>
           )}

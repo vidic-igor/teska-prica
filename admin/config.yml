@@ -112,6 +112,16 @@ collections:
           - { name: email,     label: "E-mail",           widget: string }
           - { name: instagram, label: "Instagram (bez @)", widget: string }
           - { name: base,      label: "Baza / region",    widget: string }
+          - name: video
+            label: "Video snimak (kratak klip)"
+            widget: file
+            required: false
+            hint: "MP4, 15–25 sek, do ~4 MB. Prikazuje se u galeriji, bez tona dok posetilac ne klikne."
+          - name: videoPoster
+            label: "Naslovna slika videa"
+            widget: image
+            required: false
+            hint: "Prvi kadar klipa. Opciono."
           - name: pastVenues
             label: "Mesta gde smo svirali"
             widget: list
