@@ -351,6 +351,10 @@ const MESECI = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', '
 /* Opens the visitor's map app at the venue. A Google Maps link pasted into the
    catalogue wins — whoever copied it saw the place on screen, so it cannot be
    wrong. Otherwise we search the same string a person would type. */
+function safeUrl(u) {
+  return /^https:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '';
+}
+
 function mapUrlFor(name, city, address, mapUrl) {
   const pasted = String(mapUrl || '').trim();
   if (/^https:\/\//i.test(pasted)) return pasted;
@@ -375,6 +379,7 @@ function prepareGigs(gigs, venues) {
       place: v ? v.name : (g.venue || g.place || ''),
       city: v ? v.city : (g.city || ''),
       address: v ? (v.address || '') : '',
+      phone: v ? (v.phone || '') : '',
       mapUrl: mapUrlFor(v ? v.name : (g.venue || g.place || ''), v ? v.city : (g.city || ''), v && v.address, v && v.mapUrl),
       dt,
       past: dt ? dt < today : false,
@@ -417,6 +422,7 @@ function Gigs({ gigs, settings, venues }) {
               <div>
                 <div className="display" style={{ fontSize: 56, lineHeight: 0.9, color: g.highlight ? 'var(--accent)' : 'var(--fg)' }}>{g.d}</div>
                 <div className="mono" style={{ marginTop: 4 }}>{g.m} · {g.y}</div>
+                {g.time && <div className="mono" style={{ marginTop: 2, color: 'var(--accent)' }}>{g.time}</div>}
               </div>
               <div>
                 <div style={{ fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{g.place}</div>
@@ -427,7 +433,19 @@ function Gigs({ gigs, settings, venues }) {
                     Kako doći ↗
                   </a>}
               </div>
-              <div className="gig-note" style={{ color: 'var(--fg-dim)', fontSize: 14 }}>{g.note}</div>
+              <div className="gig-note" style={{ color: 'var(--fg-dim)', fontSize: 14 }}>
+                {g.note}
+                {!g.past && (g.noReservation
+                  ? <div className="mono" style={{ marginTop: 10 }}>Bez rezervacije</div>
+                  : (g.phone || safeUrl(g.reservationUrl)) &&
+                    <div className="mono" style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: '4px 14px' }}>
+                      {String(g.phone || '').split('/').map(n => n.trim()).filter(Boolean).map((n, k) =>
+                        <a key={k} href={'tel:' + n.replace(/[^+\d]/g, '')} style={{ color: 'var(--accent)' }}>{n}</a>)}
+                      {safeUrl(g.reservationUrl) &&
+                        <a href={safeUrl(g.reservationUrl)} target="_blank" rel="noopener noreferrer"
+                          style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: 4 }}>Rezervacije ↗</a>}
+                    </div>)}
+              </div>
               <div className="mono gig-tag" style={{
                 padding: '6px 12px', border: '1px solid currentColor',
                 color: g.past ? 'var(--fg-dim)' : 'var(--accent)',

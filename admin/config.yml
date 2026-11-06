@@ -27,6 +27,11 @@ collections:
                 widget: string
                 required: false
                 hint: "Npr. Trg slobode 1. Prikazuje se uz grad u rasporedu."
+              - name: phone
+                label: "Telefon za rezervacije"
+                widget: string
+                required: false
+                hint: "Telefon mesta. Opciono. Može i više brojeva, npr. 024 555 111 / 060 123 4567."
               - name: mapUrl
                 label: "Link sa Google mapa"
                 widget: string
@@ -61,6 +66,26 @@ collections:
                 value_field: "items.*.name"
                 required: false
                 hint: "Izaberi iz kataloga mesta. Grad se povlači sam."
+              - name: time
+                label: "Početak"
+                widget: datetime
+                date_format: false
+                time_format: "HH:mm"
+                format: "HH:mm"
+                required: false
+                hint: "Opciono. Npr. 21:00."
+              - name: noReservation
+                label: "Bez rezervacije"
+                widget: boolean
+                default: false
+                required: false
+                hint: "Prikazuje „Bez rezervacije“ umesto telefona i linka."
+              - name: reservationUrl
+                label: "Link za rezervacije"
+                widget: string
+                required: false
+                pattern: ['^$|^https://', "Mora počinjati sa https://"]
+                hint: "Opciono. Stranica za rezervacije ili ulaznice."
               - { name: place, label: "Mesto — ručno", widget: string, required: false, hint: "Popuni samo ako mesta nema u katalogu." }
               - { name: city,  label: "Grad — ručno",  widget: string, required: false }
               - { name: note,      label: Napomena,  widget: string }
