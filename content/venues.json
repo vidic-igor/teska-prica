@@ -1,0 +1,13 @@
+{
+  "items": [
+    { "name": "Jadran",              "city": "Subotica" },
+    { "name": "Hotel Galleria",      "city": "Subotica" },
+    { "name": "Hotel Patria",        "city": "Subotica" },
+    { "name": "Lounge 27",           "city": "Subotica" },
+    { "name": "Klub Barutana",       "city": "Beograd" },
+    { "name": "Restoran Aquarius",   "city": "Novi Sad" },
+    { "name": "Klub Tesla",          "city": "Palić" },
+    { "name": "Letnja Pozornica",    "city": "Palić" },
+    { "name": "Dvorac Fantast",      "city": "Bečej" }
+  ]
+}

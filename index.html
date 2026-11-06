@@ -144,7 +144,7 @@
   .grid-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
   .grid-booking { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; margin-top: 40px; }
   .gig-row { display: grid; grid-template-columns: 120px 2fr 1.5fr auto; gap: 32px; }
-  .showcase-inner { aspect-ratio: 21/9; max-height: 80vh; }
+  .grid-showcase { display: grid; grid-template-columns: 1fr 0.82fr; gap: 72px; align-items: center; }
 
   @media (max-width: 1100px) {
     .grid-2 { grid-template-columns: 1fr; gap: 40px; }
@@ -159,7 +159,8 @@
     .gig-row { grid-template-columns: 80px 1fr auto !important; gap: 16px !important; }
     .gig-row .gig-note { grid-column: 1 / -1 !important; grid-row: 2; padding-top: 8px; }
     .gig-row .gig-tag { grid-row: 1; font-size: 9px !important; padding: 4px 8px !important; }
-    .showcase-inner { aspect-ratio: 4/5; max-height: none; }
+    .grid-showcase { grid-template-columns: 1fr; gap: 36px; }
+    .grid-showcase .showcase-photo { order: -1; }
     .gallery-tile { grid-column: auto !important; aspect-ratio: 1/1 !important; }
     .gallery-tile-wide { grid-column: 1 / -1 !important; aspect-ratio: 3/2 !important; }
     section { padding: 72px 0 !important; }
@@ -174,8 +175,6 @@
     .hero-cta-row .btn { flex: 1; justify-content: center; text-align: center; }
     .form-grid-2 { grid-template-columns: 1fr !important; }
     .form-grid-2 .form-col-2 { border-left: 0 !important; padding-left: 0 !important; border-top: 1px solid var(--line); }
-    .showcase-text-row { flex-direction: column; align-items: flex-start !important; }
-    .showcase-text-row .mono { text-align: left !important; }
     .top-chrome { flex-direction: column; gap: 6px !important; align-items: flex-start !important; }
     .marquee-track span { font-size: clamp(26px, 9vw, 48px) !important; }
     .footer-display { font-size: clamp(56px, 16vw, 100px) !important; }

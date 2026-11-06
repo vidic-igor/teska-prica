@@ -11,6 +11,18 @@ collections:
     label: Sadržaj sajta
     files:
 
+      - name: venues
+        label: "Katalog mesta"
+        file: content/venues.json
+        fields:
+          - name: items
+            label: "Mesta"
+            widget: list
+            summary: "{{fields.name}} — {{fields.city}}"
+            fields:
+              - { name: name, label: "Naziv mesta", widget: string }
+              - { name: city, label: "Grad",        widget: string }
+
       - name: gigs
         label: Nastupi
         file: content/gigs.json
@@ -18,7 +30,7 @@ collections:
           - name: items
             label: Nastupi
             widget: list
-            summary: "{{fields.date}} — {{fields.place}}, {{fields.city}}"
+            summary: "{{fields.date}} — {{fields.venue}}"
             fields:
               - name: date
                 label: "Datum nastupa"
@@ -28,8 +40,18 @@ collections:
                 time_format: false
                 picker_utc: false
                 hint: "Status (UPCOMING / PAST) i redosled se računaju sami iz ovog datuma."
-              - { name: place,     label: Venue,     widget: string }
-              - { name: city,      label: Grad,      widget: string }
+              - name: venue
+                label: "Mesto"
+                widget: relation
+                collection: content
+                file: venues
+                search_fields: ["items.*.name", "items.*.city"]
+                display_fields: ["items.*.name", "items.*.city"]
+                value_field: "items.*.name"
+                required: false
+                hint: "Izaberi iz kataloga mesta. Grad se povlači sam."
+              - { name: place, label: "Mesto — ručno", widget: string, required: false, hint: "Popuni samo ako mesta nema u katalogu." }
+              - { name: city,  label: "Grad — ručno",  widget: string, required: false }
               - { name: note,      label: Napomena,  widget: string }
               - { name: highlight, label: Istaknuto, widget: boolean, default: false }
 

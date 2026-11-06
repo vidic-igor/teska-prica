@@ -20,8 +20,9 @@ function App() {
       fetch('/content/gigs.json').then(r => r.json()),
       fetch('/content/members.json').then(r => r.json()),
       fetch('/content/settings.json').then(r => r.json()),
-    ]).then(([gigsData, membersData, settings]) => {
-      setContent({ gigs: gigsData.items, members: membersData.items, settings });
+      fetch('/content/venues.json').then(r => r.json()),
+    ]).then(([gigsData, membersData, settings, venuesData]) => {
+      setContent({ gigs: gigsData.items, members: membersData.items, settings, venues: venuesData.items });
     }).catch(() => setLoadError(true));
   }, []);
 
@@ -36,7 +37,7 @@ function App() {
 
   if (!content) return null;
 
-  const { gigs, members, settings } = content;
+  const { gigs, members, settings, venues } = content;
 
   return (
     <>
@@ -47,7 +48,7 @@ function App() {
       <Venues />
       <Members members={members} />
       <Showcase />
-      <Gigs gigs={gigs} settings={settings} />
+      <Gigs gigs={gigs} settings={settings} venues={venues} />
       <Gallery />
       <Booking settings={settings} />
       <Footer settings={settings} />
@@ -319,25 +320,22 @@ function Members({ members }) {
 /* ============ SHOWCASE ============ */
 function Showcase() {
   return (
-    <section data-screen-label="Showcase" style={{ position: 'relative', padding: '80px 0' }}>
-      <div className="showcase-inner" style={{ position: 'relative', overflow: 'hidden' }}>
-        <div style={{
-          position: 'absolute', inset: '-15% 0',
-          backgroundImage: "url('img/band-bw.jpg')",
-          backgroundSize: 'cover', backgroundPosition: 'center 25%',
-        }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)' }} />
-        <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0 }}>
-          <div className="container showcase-text-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24 }}>
-            <div>
-              <div className="mono" style={{ color: 'var(--accent)', marginBottom: 8 }}>19.04.2026 · JADRAN · SUBOTICA</div>
-              <div className="display" style={{ fontSize: 'clamp(40px, 5vw, 72px)', letterSpacing: '-0.01em' }}>
-                Prvi solistički<br />koncert. <span style={{ color: 'var(--accent)' }}>Sold&nbsp;out.</span>
-              </div>
-            </div>
-            <div className="mono" style={{ maxWidth: 280, textAlign: 'right' }}>
-              Milestone na putu od lokalnih nastupa do velike scene.
-            </div>
+    <section data-screen-label="Showcase" style={{ padding: '40px 0' }}>
+      <div className="container">
+        <div className="grid-showcase" style={{ borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)', padding: '72px 0' }}>
+          <div>
+            <div className="mono" style={{ color: 'var(--accent)', marginBottom: 14 }}>AKUSTIČNI SASTAV · SUBOTICA</div>
+            <h2 style={{ fontSize: 'clamp(40px, 5vw, 72px)', letterSpacing: '-0.01em', marginBottom: 20 }}>
+              Sviraćemo i na<br />vašoj <span style={{ color: 'var(--accent)' }}>proslavi.</span>
+            </h2>
+            <p className="mono" style={{ maxWidth: 360, lineHeight: 1.8, marginBottom: 36 }}>
+              Dva vokala, gitara i bubnjevi. Bez playback-a.
+            </p>
+            <a href="#booking" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
+          </div>
+          <div className="showcase-photo" style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#111' }}>
+            <img src="img/band-group.jpg" alt="Teška Priča — bend"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           </div>
         </div>
       </div>
@@ -350,15 +348,22 @@ const MESECI = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', '
 
 /* Derives UPCOMING/PAST and the display date from the stored ISO date,
    so the schedule stays correct without anyone editing it. */
-function prepareGigs(gigs) {
+function prepareGigs(gigs, venues) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  /* A gig points at the venue catalogue by name; free-text place/city stay
+     as a fallback for one-off venues that are not worth cataloguing. */
+  const catalog = new Map((venues || []).map(v => [v.name, v]));
 
   const rows = (gigs || []).map(g => {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(g.date || '').trim());
     const dt = m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
+    const v = catalog.get(g.venue);
     return {
       ...g,
+      place: v ? v.name : (g.venue || g.place || ''),
+      city: v ? v.city : (g.city || ''),
       dt,
       past: dt ? dt < today : false,
       d: dt ? String(dt.getDate()).padStart(2, '0') : '--',
@@ -372,8 +377,8 @@ function prepareGigs(gigs) {
   return upcoming.concat(past);
 }
 
-function Gigs({ gigs, settings }) {
-  const rows = prepareGigs(gigs);
+function Gigs({ gigs, settings, venues }) {
+  const rows = prepareGigs(gigs, venues);
   const firstPast = rows.findIndex(r => r.past);
   return (
     <section id="gigs" style={{ padding: '120px 0' }} data-screen-label="Gigs">
@@ -403,7 +408,7 @@ function Gigs({ gigs, settings }) {
               </div>
               <div>
                 <div style={{ fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{g.place}</div>
-                <div className="mono">{g.city.toUpperCase()}</div>
+                <div className="mono">{(g.city || '').toUpperCase()}</div>
               </div>
               <div className="gig-note" style={{ color: 'var(--fg-dim)', fontSize: 14 }}>{g.note}</div>
               <div className="mono gig-tag" style={{
