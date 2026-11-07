@@ -359,7 +359,16 @@ if (location.search.indexOf('debug') > -1) {
     panel.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font:12px/1.5 monospace;padding:8px;white-space:pre;border-bottom:2px solid #0f0';
     document.body.appendChild(panel);
 
-    var seen = 0, raf = 0;
+    /* The panel scrolls out of view during the drag, so record the extremes
+       and read them afterwards. */
+    var seen = 0, raf = 0, maxBodyH = 0, maxBodyEnds = 0, minInner = 9999, maxInner = 0;
+    setInterval(function () {
+      var r = document.body.getBoundingClientRect();
+      maxBodyH = Math.max(maxBodyH, Math.round(r.height));
+      maxBodyEnds = Math.max(maxBodyEnds, Math.round(r.bottom + window.scrollY));
+      minInner = Math.min(minInner, window.innerHeight);
+      maxInner = Math.max(maxInner, window.innerHeight);
+    }, 60);
     function render() {
       raf = 0;
       var vv = window.visualViewport;
@@ -373,7 +382,9 @@ if (location.search.indexOf('debug') > -1) {
         'body h ' + Math.round(document.body.getBoundingClientRect().height),
         'last child ends ' + Math.round(mark.getBoundingClientRect().bottom + window.scrollY),
         'body ends ' + Math.round(document.body.getBoundingClientRect().bottom + window.scrollY),
-        'body minH ' + getComputedStyle(document.body).minHeight
+        'body minH ' + getComputedStyle(document.body).minHeight,
+        'MAX bodyH ' + maxBodyH + '  MAX bodyEnds ' + maxBodyEnds,
+        'innerH range ' + minInner + ' - ' + maxInner
       ].join('\n');
     }
     function tick() { if (!raf) raf = requestAnimationFrame(render); }
