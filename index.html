@@ -83,7 +83,12 @@
     font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    /* clip, not hidden. overflow-x:hidden on html AND body makes iOS Safari
+       treat body as its own scroll container, which adds about a viewport of
+       empty scrollable space below the footer. clip clips without creating a
+       scroll container. Nothing relies on this for containment any more: the
+       marquee and the hero clip themselves with clip-path. */
+    overflow-x: clip;
   }
 
   body {
@@ -331,13 +336,14 @@ if (location.search.indexOf('debug') > -1) {
           }
         });
         var L = [
-          'viewport ' + innerWidth + 'x' + innerHeight,
-          'scrollHeight ' + d.scrollHeight,
+          'vw ' + window.innerWidth + 'x' + window.innerHeight,
+          'scroller ' + (document.scrollingElement ? document.scrollingElement.tagName : '?'),
+          'html sh ' + d.scrollHeight + ' ch ' + d.clientHeight,
+          'body  sh ' + b.scrollHeight + ' oh ' + b.offsetHeight,
           'footerBottom ' + fb,
-          'OVERHANG ' + (d.scrollHeight - fb),
-          'scrollW ' + d.scrollWidth + ' clientW ' + d.clientWidth,
-          'bodyScrollW ' + b.scrollWidth,
-          'offenders ' + over.length
+          'OVERHANG html ' + (d.scrollHeight - fb) + ' body ' + (b.scrollHeight - fb),
+          'maxScrollY ' + Math.round(scrollY),
+          'scrollW ' + d.scrollWidth + ' clientW ' + d.clientWidth
         ].concat(over.slice(0, 6));
         var o = document.createElement('div');
         o.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font:11px/1.45 monospace;padding:10px;white-space:pre-wrap;max-height:60vh;overflow:auto;border-bottom:2px solid #0f0';
