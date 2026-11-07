@@ -123,7 +123,13 @@ function Hero() {
     const onScroll = () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
-        const y = window.scrollY;
+        /* Clamp to one viewport. Past that the hero is off screen and the
+           parallax is invisible, but the transform kept growing: at the foot
+           of the page scrollY is ~12500, which pushed the backdrop 4300px
+           down and scaled it 4.75x. iOS Safari does not reliably clip a
+           transformed child to an overflow:hidden parent, so that runaway
+           became scrollable space below the footer. */
+        const y = Math.min(window.scrollY, window.innerHeight);
         if (bgRef.current) bgRef.current.style.transform = `translate3d(0, ${y * 0.35}px, 0) scale(${1 + y * 0.0003})`;
         if (titleRef.current) titleRef.current.style.transform = `translate3d(0, ${y * -0.12}px, 0)`;
         raf = 0;
@@ -138,6 +144,7 @@ function Hero() {
       position: 'relative', minHeight: '100vh',
       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
       overflow: 'hidden',
+      clipPath: 'inset(0)',
     }}>
       <div ref={bgRef} className="hero-bg" style={{
         position: 'absolute', top: -40, left: 0, right: 0, bottom: -80,
