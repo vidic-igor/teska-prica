@@ -605,6 +605,7 @@ function Field({ label, v, on, type = 'text' }) {
 }
 
 function Booking({ settings }) {
+  const panelRef = useRef(null);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(false);
@@ -642,6 +643,19 @@ function Booking({ settings }) {
       .catch(() => { setSendError(true); setSending(false); });
   };
 
+  const reset = () => {
+    setSent(false);
+    setSendError(false);
+    setForm({ name: '', contact: '', date: '', type: 'Klub / Restoran', city: '', msg: '' });
+  };
+
+  /* Bring the confirmation into view; the visitor may be anywhere on the page. */
+  useEffect(() => {
+    if (sent && panelRef.current) {
+      panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [sent]);
+
   return (
     <section id="booking" style={{ padding: '140px 0', borderTop: '1px solid var(--line)', background: 'var(--bg)' }} data-screen-label="Booking">
       <div className="container">
@@ -677,6 +691,27 @@ function Booking({ settings }) {
             </div>
           </div>
 
+          {sent ? (
+            <div ref={panelRef} role="status" aria-live="polite"
+              style={{ borderTop: '1px solid var(--line)', paddingTop: 36 }}>
+              <div className="mono" style={{ color: 'var(--accent)' }}>UPIT POSLAT ✓</div>
+              <h3 style={{ fontSize: 'clamp(34px, 4.4vw, 60px)', lineHeight: 1.04, letterSpacing: '-0.02em', margin: '16px 0 24px' }}>
+                HVALA.<br />JAVLJAMO SE<br />
+                <span style={{ color: 'var(--accent)' }}>U ROKU OD 24 SATA.</span>
+              </h3>
+              <p style={{ fontSize: 17, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 420 }}>
+                Vaš upit je stigao kod nas. Odgovaramo sa slobodnim terminima i ponudom.
+              </p>
+              <p style={{ fontSize: 17, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 420, marginTop: 14 }}>
+                Za hitne termine pozovite{' '}
+                <a href={`tel:${settings.phone.replace(/\s/g, '')}`} style={{ color: 'var(--accent)' }}>{settings.phone}</a>.
+              </p>
+              <button type="button" onClick={reset} className="mono"
+                style={{ marginTop: 32, background: 'none', border: 'none', padding: 0, color: 'var(--accent)', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 4 }}>
+                POŠALJI NOVI UPIT
+              </button>
+            </div>
+          ) : (
           <form onSubmit={submit}>
             <input type="hidden" name="form-name" value="booking" />
             <input type="hidden" name="bot-field" />
@@ -708,14 +743,15 @@ function Booking({ settings }) {
               />
             </label>
             {sendError && (
-              <p style={{ color: 'oklch(0.68 0.19 25)', fontFamily: 'JetBrains Mono, monospace', fontSize: 11, letterSpacing: '0.14em', marginTop: 16 }}>
+              <p role="alert" style={{ color: 'oklch(0.68 0.19 25)', fontFamily: 'JetBrains Mono, monospace', fontSize: 11, letterSpacing: '0.14em', marginTop: 16 }}>
                 GREŠKA SLANJA · POKUŠAJTE PONOVO ILI POZOVITE DIREKTNO
               </p>
             )}
-            <button type="submit" className="btn btn-accent" disabled={sending} style={{ marginTop: 16, fontSize: 13, padding: '18px 28px' }}>
+            <button type="submit" className="btn btn-accent" disabled={sending || sent} style={{ marginTop: 16, fontSize: 13, padding: '18px 28px' }}>
               {sent ? 'UPIT POSLAT ✓' : sending ? 'SLANJE...' : 'POŠALJI UPIT'} &nbsp;→
             </button>
           </form>
+          )}
         </div>
       </div>
     </section>
