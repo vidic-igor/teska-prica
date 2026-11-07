@@ -89,6 +89,10 @@
        scroll container. Nothing relies on this for containment any more: the
        marquee and the hero clip themselves with clip-path. */
     overflow-x: clip;
+    /* Stop iOS rubber-banding past the end of the document, which drags the
+       whole page up — fixed elements included — and shows the background
+       below the footer. */
+    overscroll-behavior-y: none;
   }
 
   /* iOS paints this behind the document when the toolbar collapses at the
