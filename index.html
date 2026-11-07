@@ -307,6 +307,43 @@
 <div id="root"></div>
 
 <!--build:content-->
+<!-- Temporary: add ?debug=1 to read layout measurements on a real device.
+     Inert without the query string. Remove once the iOS scroll bug is closed. -->
+<script>
+if (location.search.indexOf('debug') > -1) {
+  addEventListener('load', function () {
+    setTimeout(function () {
+      scrollTo(0, 9999999);
+      setTimeout(function () {
+        var d = document.documentElement, b = document.body;
+        var f = document.querySelector('footer');
+        var fb = Math.round(f.getBoundingClientRect().bottom + scrollY);
+        var over = [];
+        document.querySelectorAll('*').forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          var bot = Math.round(r.bottom + scrollY), rt = Math.round(r.right);
+          if (r.height > 0 && (bot > fb + 2 || rt > d.clientWidth + 2)) {
+            over.push((el.tagName + (el.className && el.className.split ? '.' + el.className.split(' ')[0] : '')) + ' b=' + bot + ' r=' + rt);
+          }
+        });
+        var L = [
+          'viewport ' + innerWidth + 'x' + innerHeight,
+          'scrollHeight ' + d.scrollHeight,
+          'footerBottom ' + fb,
+          'OVERHANG ' + (d.scrollHeight - fb),
+          'scrollW ' + d.scrollWidth + ' clientW ' + d.clientWidth,
+          'bodyScrollW ' + b.scrollWidth,
+          'offenders ' + over.length
+        ].concat(over.slice(0, 6));
+        var o = document.createElement('div');
+        o.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font:11px/1.45 monospace;padding:10px;white-space:pre-wrap;max-height:60vh;overflow:auto;border-bottom:2px solid #0f0';
+        o.textContent = L.join('\n');
+        document.body.appendChild(o);
+      }, 900);
+    }, 700);
+  });
+}
+</script>
 <script defer src="app.js"></script>
 </body>
 </html>
