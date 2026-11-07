@@ -25,7 +25,10 @@
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
-<meta name="theme-color" content="#07080d" />
+<!-- iOS paints the browser chrome and the area revealed by overscroll with
+     this, not with the page background. Matching the footer stops the strip
+     below the footer reading as an empty black gap. -->
+<meta name="theme-color" content="#0d1220" />
 
 <script type="application/ld+json">
 {
