@@ -108,7 +108,10 @@
       radial-gradient(ellipse 80% 60% at 50% 0%, var(--bg-3) 0%, transparent 70%),
       radial-gradient(ellipse 70% 50% at 80% 90%, var(--bg-2) 0%, transparent 60%),
       var(--bg);
-    min-height: 100vh;
+    /* No min-height: 100vh. The page is always far taller than a viewport,
+       so it could never do anything useful, and 100vh on iOS resolves
+       against the large viewport (toolbars hidden). body was measuring a
+       full viewport taller than its own last child. */
     position: relative;
   }
   /* sections above the fixed hero need bg to cover it */
@@ -359,7 +362,11 @@ if (location.search.indexOf('debug') > -1) {
         'limit ' + (d.scrollHeight - d.clientHeight),
         'vv pageTop ' + (vv ? Math.round(vv.pageTop) : '-') + '  offTop ' + (vv ? Math.round(vv.offsetTop) : '-'),
         'vv h ' + (vv ? Math.round(vv.height) : '-') + '  innerH ' + window.innerHeight + '  clientH ' + d.clientHeight,
-        'scale ' + (vv ? vv.scale : '-')
+        'scale ' + (vv ? vv.scale : '-'),
+        'body h ' + Math.round(document.body.getBoundingClientRect().height),
+        'last child ends ' + Math.round(mark.getBoundingClientRect().bottom + window.scrollY),
+        'body ends ' + Math.round(document.body.getBoundingClientRect().bottom + window.scrollY),
+        'body minH ' + getComputedStyle(document.body).minHeight
       ].join('\n');
     }
     function tick() { if (!raf) raf = requestAnimationFrame(render); }
