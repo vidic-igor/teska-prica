@@ -96,7 +96,7 @@ function handleAuth(env, url) {
 
   const authorize = new URL(AUTHORIZE_URL);
   authorize.searchParams.set('client_id', env.GITHUB_OAUTH_ID);
-  authorize.searchParams.set('redirect_uri', `${url.origin}/callback?provider=github`);
+  authorize.searchParams.set('redirect_uri', `${url.origin}/callback`);
   authorize.searchParams.set('scope', env.GITHUB_SCOPE || 'public_repo,user');
   authorize.searchParams.set('state', state);
 
@@ -131,7 +131,7 @@ async function handleCallback(request, env, url) {
       client_id: env.GITHUB_OAUTH_ID,
       client_secret: env.GITHUB_OAUTH_SECRET,
       code,
-      redirect_uri: `${url.origin}/callback?provider=github`,
+      redirect_uri: `${url.origin}/callback`,
     }),
   });
 
@@ -163,11 +163,12 @@ export default {
     if (request.method !== 'GET') {
       return new Response('Method not allowed', { status: 405 });
     }
-    if (url.searchParams.get('provider') !== 'github') {
-      return new Response('Unsupported provider', { status: 400 });
+    if (url.pathname === '/auth') {
+      if (url.searchParams.get('provider') !== 'github') {
+        return new Response('Unsupported provider', { status: 400 });
+      }
+      return handleAuth(env, url);
     }
-
-    if (url.pathname === '/auth') return handleAuth(env, url);
     if (url.pathname === '/callback') return handleCallback(request, env, url);
 
     return new Response('Not found', { status: 404 });
