@@ -1,0 +1,18 @@
+name = "teska-prica-auth"
+main = "src/index.js"
+compatibility_date = "2026-11-07"
+
+[vars]
+# Origins allowed to receive the OAuth token. Keep both entries while the site
+# lives on Netlify and is being tested on Cloudflare Pages; drop the pages.dev
+# one once the migration is finished.
+SITE_ORIGINS = "https://teskaprica.rs,https://teska-prica.pages.dev"
+
+# The repo is public, so public_repo is enough to let the CMS commit.
+GITHUB_SCOPE = "public_repo,user"
+
+# Public half of the GitHub OAuth App. Fill this in before deploying.
+GITHUB_OAUTH_ID = "REPLACE_WITH_GITHUB_OAUTH_CLIENT_ID"
+
+# GITHUB_OAUTH_SECRET is never stored here. Set it once with:
+#   npx wrangler secret put GITHUB_OAUTH_SECRET
