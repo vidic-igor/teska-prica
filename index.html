@@ -321,33 +321,41 @@
 <div id="root"></div>
 
 <!--build:content-->
-<!-- Temporary: ?debug=1 shows a live layout readout. Inert without it.
-     Remove once the iOS scroll bug is closed. -->
+<!-- Temporary: ?debug=1 adds a live readout and a magenta strip marking the
+     true end of the document. Inert without it. Remove once closed. -->
 <script>
 if (location.search.indexOf('debug') > -1) {
   addEventListener('load', function () {
     var d = document.documentElement;
-    var o = document.createElement('div');
-    o.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font:12px/1.5 monospace;padding:8px;white-space:pre;border-bottom:2px solid #0f0';
-    document.body.appendChild(o);
-    var raf = 0;
+
+    var mark = document.createElement('div');
+    mark.style.cssText = 'height:12px;background:#f0f';
+    document.body.appendChild(mark);
+
+    var panel = document.createElement('div');
+    panel.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font:12px/1.5 monospace;padding:8px;white-space:pre;border-bottom:2px solid #0f0';
+    document.body.appendChild(panel);
+
+    var seen = 0, raf = 0;
     function render() {
       raf = 0;
-      var f = document.querySelector('footer');
-      var fb = f ? Math.round(f.getBoundingClientRect().bottom + window.scrollY) : -1;
       var vv = window.visualViewport;
-      var maxY = d.scrollHeight - d.clientHeight;
-      o.textContent = [
-        'scrollY ' + Math.round(window.scrollY) + ' of ' + maxY,
-        'GAP below footer ' + (d.scrollHeight - fb),
-        'scrollH ' + d.scrollHeight + '  footerBottom ' + fb,
-        'clientH ' + d.clientHeight + '  innerH ' + window.innerHeight + '  visualH ' + (vv ? Math.round(vv.height) : '-'),
-        'scrollW ' + d.scrollWidth + '  clientW ' + d.clientWidth
+      seen = Math.max(seen, Math.round(window.scrollY));
+      panel.textContent = [
+        'scrollY ' + Math.round(window.scrollY) + '  maxSeen ' + seen,
+        'limit ' + (d.scrollHeight - d.clientHeight),
+        'vv pageTop ' + (vv ? Math.round(vv.pageTop) : '-') + '  offTop ' + (vv ? Math.round(vv.offsetTop) : '-'),
+        'vv h ' + (vv ? Math.round(vv.height) : '-') + '  innerH ' + window.innerHeight + '  clientH ' + d.clientHeight,
+        'scale ' + (vv ? vv.scale : '-')
       ].join('\n');
     }
-    addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(render); }, { passive: true });
-    addEventListener('resize', render);
-    if (window.visualViewport) window.visualViewport.addEventListener('resize', render);
+    function tick() { if (!raf) raf = requestAnimationFrame(render); }
+    addEventListener('scroll', tick, { passive: true });
+    addEventListener('resize', tick);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', tick);
+      window.visualViewport.addEventListener('scroll', tick);
+    }
     render();
   });
 }
