@@ -11,8 +11,10 @@ SITE_ORIGINS = "https://teska-prica.igor-vidic92.workers.dev"
 # The repo is public, so public_repo is enough to let the CMS commit.
 GITHUB_SCOPE = "public_repo,user"
 
-# Public half of the GitHub OAuth App. Fill this in before deploying.
-GITHUB_OAUTH_ID = "REPLACE_WITH_GITHUB_OAUTH_CLIENT_ID"
+# Public half of the GitHub OAuth App. Not a secret; it ships in the auth URL.
+# Do not try to tell OAuth Apps from GitHub Apps by this prefix - check which
+# list the app appears under in GitHub settings instead.
+GITHUB_OAUTH_ID = "Ov23li9Y0sEKYS3oSaJc"
 
 # GITHUB_OAUTH_SECRET is never stored here. Set it once with:
 #   npx wrangler secret put GITHUB_OAUTH_SECRET
