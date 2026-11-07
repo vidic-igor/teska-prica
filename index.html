@@ -91,6 +91,11 @@
     overflow-x: clip;
   }
 
+  /* iOS paints this behind the document when the toolbar collapses at the
+     bottom, and when you overscroll. Black against the footer's --bg-2 read
+     as an empty gap, so match the footer instead. */
+  html { background: var(--bg-2); }
+
   body {
     background:
       radial-gradient(ellipse 80% 60% at 50% 0%, var(--bg-3) 0%, transparent 70%),
