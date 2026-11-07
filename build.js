@@ -45,6 +45,14 @@ const CONVERTIBLE = new Set(['.jpg', '.jpeg', '.png']);
 const MAX_EDGE = 1400;
 const WEBP_QUALITY = 76;
 
+/* Social crawlers are not browsers. Facebook, LinkedIn and WhatsApp handle
+   WebP link previews poorly or not at all, so og:image and the JSON-LD image
+   keep a JPEG. Only the absolute https:// URLs are swapped back; the preload
+   link and the CSS background stay WebP for real browsers. */
+const SOCIAL_SOURCE = 'img/hero.jpg';
+const SOCIAL_OUT = 'img/hero.jpg';
+const SOCIAL_WIDTH = 1200;
+
 const fail = (msg) => {
   console.error('build: ' + msg);
   process.exit(1);
@@ -181,6 +189,23 @@ async function main() {
   if (!html.includes(ROOT_DIV)) fail(`${ROOT_DIV} is missing from index.html`);
 
   html = rewritePaths(html, renames); /* the hero preload link */
+
+  /* Emit a JPEG purely for link previews and swap the absolute URLs back. */
+  const socialSrc = path.join(root, SOCIAL_SOURCE);
+  if (!fs.existsSync(socialSrc)) fail(SOCIAL_SOURCE + ' is missing; it is the share image');
+  await sharp(socialSrc)
+    .rotate()
+    .resize({ width: SOCIAL_WIDTH, withoutEnlargement: true })
+    .jpeg({ quality: 80, mozjpeg: true })
+    .toFile(path.join(dist, SOCIAL_OUT));
+
+  const socialWebp = renames.get(SOCIAL_SOURCE);
+  if (socialWebp) {
+    html = html.split('teskaprica.rs/' + socialWebp).join('teskaprica.rs/' + SOCIAL_OUT);
+  }
+  if (!html.includes('teskaprica.rs/' + SOCIAL_OUT)) {
+    fail('share image URL was not restored to a JPEG');
+  }
   html = html.replace(CONTENT_MARKER, `<script>window.__CONTENT__=${payload};</script>`);
 
   /*
