@@ -1,0 +1,10 @@
+{
+  "name": "teska-prica-auth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub OAuth broker for Decap CMS. Its own package.json so wrangler treats worker/ as the project root instead of walking up to the site's wrangler.jsonc and deploying the site by mistake.",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "secret": "wrangler secret put GITHUB_OAUTH_SECRET"
+  }
+}
