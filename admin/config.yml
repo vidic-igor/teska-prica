@@ -2,6 +2,10 @@ backend:
   name: github
   repo: vidic-igor/teska-prica
   branch: main
+  # Our own OAuth broker (worker/ in this repo). Without this line Decap
+  # falls back to api.netlify.com, which only works for sites hosted on
+  # Netlify. No trailing slash, no path.
+  base_url: https://teska-prica-auth.igor-vidic92.workers.dev
 
 media_folder: uploads
 public_folder: /uploads
