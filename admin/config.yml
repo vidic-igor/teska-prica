@@ -22,6 +22,9 @@ collections:
           - name: items
             label: "Mesta"
             widget: list
+            collapsed: true
+            add_to_top: true
+            label_singular: "Mesto"
             summary: "{{fields.name}} — {{fields.city}}"
             fields:
               - { name: name, label: "Naziv mesta", widget: string }
@@ -50,6 +53,9 @@ collections:
           - name: items
             label: Nastupi
             widget: list
+            collapsed: true
+            add_to_top: true
+            label_singular: "Nastup"
             summary: "{{fields.date}} — {{fields.venue}}"
             fields:
               - name: date
@@ -102,6 +108,10 @@ collections:
           - name: items
             label: "Članovi"
             widget: list
+            collapsed: true
+            add_to_top: true
+            label_singular: "Član"
+            summary: "{{fields.name}} — {{fields.role}}"
             fields:
               - { name: name, label: Ime,         widget: string }
               - { name: role, label: Uloga,       widget: string }
@@ -129,3 +139,5 @@ collections:
           - name: pastVenues
             label: "Mesta gde smo svirali"
             widget: list
+            add_to_top: true
+            label_singular: "Mesto"
