@@ -92,8 +92,8 @@ collections:
                 hint: "Opciono. Stranica za rezervacije ili ulaznice."
               - { name: place, label: "Mesto — ručno", widget: string, required: false, hint: "Popuni samo ako mesta nema u katalogu." }
               - { name: city,  label: "Grad — ručno",  widget: string, required: false }
-              - { name: note,      label: Napomena,  widget: string }
-              - { name: highlight, label: Istaknuto, widget: boolean, default: false }
+              - { name: note,      label: Napomena,  widget: string,  required: false, hint: "Opciono. Npr. „SOLD OUT“ ili „Prvi solistički koncert“." }
+              - { name: highlight, label: Istaknuto, widget: boolean, default: false, required: false }
 
       - name: members
         label: "Članovi benda"
