@@ -6,6 +6,12 @@ compatibility_date = "2026-11-07"
 # deploys but the workers.dev hostname answers 404.
 workers_dev = true
 
+# Deploys fail if this secret is not already on the Worker. Names only -
+# never values. This is the guard that catches the secret landing on the
+# wrong Worker.
+[secrets]
+required = ["GITHUB_OAUTH_SECRET"]
+
 [vars]
 # Origins allowed to receive the OAuth token. This is the site the CMS runs on,
 # not this Worker. Add the old *.netlify.app origin too if /admin still needs
