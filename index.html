@@ -136,6 +136,13 @@
 
   h1, h2, h3 { font-family: 'Anton', 'Bebas Neue', sans-serif; font-weight: 400; letter-spacing: 0.005em; text-transform: uppercase; line-height: 1.02; }
   .display { font-family: 'Anton', sans-serif; text-transform: uppercase; line-height: 1.02; letter-spacing: 0.01em; }
+  /* 100vh on iOS is the LARGE viewport, the height with the toolbars
+     hidden, and it re-resolves when they hide. Dragging at the bottom hid
+     the toolbar, grew this element, grew body, and produced more scrollable
+     space under your finger. 100svh is the small viewport and does not
+     move. The 100vh line stays as a fallback for browsers without svh. */
+  .viewport-tall { min-height: 100vh; min-height: 100svh; }
+
   .mono  { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim); }
 
   a { color: inherit; text-decoration: none; }

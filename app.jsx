@@ -38,7 +38,7 @@ function App() {
   }, []);
 
   if (loadError) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif', color: '#8a8e99', textAlign: 'center' }}>
+    <div className="viewport-tall" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif', color: '#8a8e99', textAlign: 'center' }}>
       <div>
         <div style={{ fontSize: 48, marginBottom: 16, fontFamily: 'Anton, sans-serif', color: '#ecebe6' }}>TEŠKA PRIČA</div>
         <p>Greška pri učitavanju sajta. Pokušajte ponovo.</p>
@@ -140,8 +140,8 @@ function Hero() {
   }, []);
 
   return (
-    <header id="top" data-screen-label="Hero" style={{
-      position: 'relative', minHeight: '100vh',
+    <header id="top" data-screen-label="Hero" className="viewport-tall" style={{
+      position: 'relative',
       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
       overflow: 'hidden',
       clipPath: 'inset(0)',
