@@ -1,0 +1,15 @@
+# Cloudflare static-asset headers. Scoped to the two HTML entry points on
+# purpose: a /* rule here would rewrite Content-Type on images and JSON too.
+# The <meta charset> in the markup covers browsers; this covers the header,
+# which is what SEO crawlers read.
+/
+  Content-Type: text/html; charset=utf-8
+
+/index.html
+  Content-Type: text/html; charset=utf-8
+
+/admin/
+  Content-Type: text/html; charset=utf-8
+
+/admin/index.html
+  Content-Type: text/html; charset=utf-8

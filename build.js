@@ -20,6 +20,7 @@ const ASSETS = [
   'robots.txt',
   'sitemap.xml',
   'site.webmanifest',
+  '_headers',
   'favicon.ico',
   'favicon-32.png',
   'apple-touch-icon.png',
