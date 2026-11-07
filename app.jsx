@@ -775,7 +775,7 @@ function Booking({ settings }) {
 /* ============ FOOTER ============ */
 function Footer({ settings }) {
   return (
-    <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--line)', background: 'var(--bg-2)' }}>
+    <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--line)', background: 'var(--bg)' }}>
       <div className="container">
         <div style={{ paddingBottom: 40 }}>
           <div className="mono" style={{ color: 'var(--fg-dim)', marginBottom: 24, textAlign: 'center', letterSpacing: '0.22em' }}>

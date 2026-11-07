@@ -25,10 +25,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
-<!-- iOS paints the browser chrome and the area revealed by overscroll with
-     this, not with the page background. Matching the footer stops the strip
-     below the footer reading as an empty black gap. -->
-<meta name="theme-color" content="#0d1220" />
+<meta name="theme-color" content="#07080d" />
 
 <script type="application/ld+json">
 {
@@ -97,11 +94,6 @@
        below the footer. */
     overscroll-behavior-y: none;
   }
-
-  /* iOS paints this behind the document when the toolbar collapses at the
-     bottom, and when you overscroll. Black against the footer's --bg-2 read
-     as an empty gap, so match the footer instead. */
-  html { background: var(--bg-2); }
 
   body {
     background:
