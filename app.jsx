@@ -78,11 +78,11 @@ function Nav() {
   }, []);
 
   const links = [
-    { href: '#about',   label: 'O bendu' },
-    { href: '#venues',  label: 'Gde sviramo' },
-    { href: '#members', label: 'Sastav' },
-    { href: '#gigs',    label: 'Nastupi' },
-    { href: '#gallery', label: 'Galerija' },
+    { href: '#o-bendu',     label: 'O bendu' },
+    { href: '#gde-sviramo', label: 'Gde sviramo' },
+    { href: '#sastav',      label: 'Sastav' },
+    { href: '#nastupi',     label: 'Nastupi' },
+    { href: '#galerija',    label: 'Galerija' },
   ];
 
   return (
@@ -99,7 +99,7 @@ function Nav() {
         </a>
         <div className="nav-links">
           {links.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
-          <a href="#booking" className="nav-cta">Booking →</a>
+          <a href="#kontakt" className="nav-cta">Booking →</a>
         </div>
         <button className="mobile-menu-btn" onClick={() => setMenuOpen(true)}>MENI</button>
       </nav>
@@ -107,7 +107,7 @@ function Nav() {
         <div className="mobile-menu">
           <button className="mobile-menu-close" onClick={() => setMenuOpen(false)}>✕</button>
           {links.map(l => <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>)}
-          <a href="#booking" onClick={() => setMenuOpen(false)} style={{ color: 'var(--accent)' }}>Booking →</a>
+          <a href="#kontakt" onClick={() => setMenuOpen(false)} style={{ color: 'var(--accent)' }}>Booking →</a>
         </div>
       )}
     </>
@@ -158,15 +158,18 @@ function Hero() {
 
       <div style={{ position: 'relative', zIndex: 5, paddingBottom: 64 }}>
         <div className="container">
-          <div className="mono" style={{ marginBottom: 48, color: 'var(--accent)' }}>AKUSTIČNI BEND · SVE UŽIVO</div>
-          <h1 ref={titleRef} className="display" style={{
-            willChange: 'transform',
+          <h1 className="display" style={{
             letterSpacing: '-0.01em',
             textAlign: 'left',
             lineHeight: 1.1,
             fontSize: 'clamp(80px, 16vw, 200px)',
           }}>
-            TEŠKA{' '}<br />PRIČA
+            <span className="mono" style={{ display: 'block', marginBottom: 48, color: 'var(--accent)' }}>
+              AKUSTIČNI BEND · SVE UŽIVO
+            </span>
+            <span ref={titleRef} style={{ display: 'block', willChange: 'transform' }}>
+              TEŠKA{' '}<br />PRIČA
+            </span>
           </h1>
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
@@ -178,8 +181,8 @@ function Hero() {
               <div style={{ fontSize: 18, color: 'var(--fg)' }}>Teška priča da ćete se loše provesti uz nas.</div>
             </div>
             <div style={{ display: 'flex', gap: 12 }} className="hero-cta-row">
-              <a href="#booking" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
-              <a href="#gallery" className="btn">Pogledajte uživo</a>
+              <a href="#kontakt" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
+              <a href="#galerija" className="btn">Pogledajte uživo</a>
             </div>
           </div>
         </div>
@@ -213,7 +216,7 @@ function Marquee() {
 /* ============ ABOUT ============ */
 function About({ settings, members }) {
   return (
-    <section id="about" style={{ padding: '140px 0' }} data-screen-label="About">
+    <section id="o-bendu" style={{ padding: '140px 0' }} data-screen-label="About">
       <div className="container">
         <div className="grid-2">
           <div className="sticky-col" style={{ position: 'sticky', top: 120 }}>
@@ -257,7 +260,7 @@ function Stat({ n, l }) {
 /* ============ VENUES ============ */
 function Venues() {
   return (
-    <section id="venues" style={{ padding: '120px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }} data-screen-label="Venues">
+    <section id="gde-sviramo" style={{ padding: '120px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }} data-screen-label="Venues">
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, flexWrap: 'wrap', gap: 24 }}>
           <div>
@@ -293,7 +296,7 @@ function Venues() {
 /* ============ MEMBERS ============ */
 function Members({ members }) {
   return (
-    <section id="members" style={{ padding: '140px 0' }} data-screen-label="Members">
+    <section id="sastav" style={{ padding: '140px 0' }} data-screen-label="Members">
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, flexWrap: 'wrap', gap: 24 }}>
           <div>
@@ -342,7 +345,7 @@ function Showcase() {
             <p className="mono" style={{ maxWidth: 360, lineHeight: 1.8, marginBottom: 36 }}>
               Dva vokala, gitara i bubnjevi.
             </p>
-            <a href="#booking" className="btn btn-accent">Rezervišite bend &nbsp;→</a>
+            <a href="#kontakt" className="btn btn-accent">Zakažite termin &nbsp;→</a>
           </div>
           <div className="showcase-photo" style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#111' }}>
             <img src="img/band-group.jpg" alt="Teška Priča — bend"
@@ -416,7 +419,7 @@ function Gigs({ gigs, settings, venues }) {
   const [showAllPast, setShowAllPast] = useState(false);
   const shownPast = showAllPast ? past : past.slice(0, PAST_VISIBLE);
   return (
-    <section id="gigs" style={{ padding: '120px 0' }} data-screen-label="Gigs">
+    <section id="nastupi" style={{ padding: '120px 0' }} data-screen-label="Gigs">
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, flexWrap: 'wrap', gap: 24 }}>
           <div>
@@ -447,8 +450,9 @@ function Gigs({ gigs, settings, venues }) {
                 <div className="mono">{[(g.city || '').toUpperCase(), g.address].filter(Boolean).join(' · ')}</div>
                 {g.mapUrl &&
                   <a className="mono" href={g.mapUrl} target="_blank" rel="noopener noreferrer"
+                    aria-label={`Kako doći — ${g.place}`}
                     style={{ display: 'inline-block', marginTop: 10, color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: 4 }}>
-                    Kako doći ↗
+                    Kako doći — {g.place} ↗
                   </a>}
               </div>
               <div className="gig-note" style={{ color: 'var(--fg-dim)', fontSize: 14 }}>
@@ -560,7 +564,7 @@ function Gallery({ settings }) {
   ];
 
   return (
-    <section id="gallery" style={{ padding: '120px 0', background: 'var(--bg-2)' }} data-screen-label="Gallery">
+    <section id="galerija" style={{ padding: '120px 0', background: 'var(--bg-2)' }} data-screen-label="Gallery">
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, flexWrap: 'wrap', gap: 24 }}>
           <div>
@@ -574,7 +578,7 @@ function Gallery({ settings }) {
             <div key={i} className={`gallery-tile ${i === 0 ? 'gallery-tile-wide' : ''}`} style={{ gridColumn: t.span, aspectRatio: t.ar, position: 'relative', overflow: 'hidden', background: '#111' }}>
               {t.video
                 ? <VideoTile src={t.video} poster={t.poster} />
-                : <img src={t.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s' }}
+                : <img src={t.src} alt={`Teška Priča — ${t.label}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s' }}
                     onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
                     onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   />}
@@ -655,7 +659,7 @@ function Booking({ settings }) {
   }, [sent]);
 
   return (
-    <section id="booking" style={{ padding: '140px 0', borderTop: '1px solid var(--line)', background: 'var(--bg)' }} data-screen-label="Booking">
+    <section id="kontakt" style={{ padding: '140px 0', borderTop: '1px solid var(--line)', background: 'var(--bg)' }} data-screen-label="Booking">
       <div className="container">
         <div className="section-label">06 — Kontakt</div>
         <h2 style={{ fontSize: 'clamp(64px, 10vw, 180px)', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 48 }}>
