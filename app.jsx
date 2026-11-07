@@ -19,6 +19,16 @@ const INLINE_CONTENT = typeof window !== 'undefined' ? window.__CONTENT__ : null
 
 /* Booking form relay. The access key is a submit-only endpoint id meant to
    ship in the page, not a secret. */
+/* The page scrolls inside #root rather than the window, so window.scrollY
+   is always 0. Everything that reacts to scrolling reads it from here. */
+const scroller = () => document.getElementById('root');
+const scrollTop = () => { const el = scroller(); return el ? el.scrollTop : window.scrollY; };
+const onScroll = (fn) => {
+  const el = scroller() || window;
+  el.addEventListener('scroll', fn, { passive: true });
+  return () => el.removeEventListener('scroll', fn);
+};
+
 const WEB3FORMS_KEY = '80d7bb74-9e68-455b-9bfb-f704db73d96c';
 
 function App() {
@@ -72,9 +82,9 @@ function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', on);
-    return () => window.removeEventListener('scroll', on);
+    const on = () => setScrolled(scrollTop() > 40);
+    on();
+    return onScroll(on);
   }, []);
 
   const links = [
@@ -126,7 +136,7 @@ function Hero() {
     if (window.matchMedia('(max-width: 900px)').matches) return;
 
     let raf = 0;
-    const onScroll = () => {
+    const handler = () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         /* Clamp to one viewport. Past that the hero is off screen and the
@@ -135,14 +145,13 @@ function Hero() {
            down and scaled it 4.75x. iOS Safari does not reliably clip a
            transformed child to an overflow:hidden parent, so that runaway
            became scrollable space below the footer. */
-        const y = Math.min(window.scrollY, window.innerHeight);
+        const y = Math.min(scrollTop(), window.innerHeight);
         if (bgRef.current) bgRef.current.style.transform = `translate3d(0, ${y * 0.35}px, 0) scale(${1 + y * 0.0003})`;
         if (titleRef.current) titleRef.current.style.transform = `translate3d(0, ${y * -0.12}px, 0)`;
         raf = 0;
       });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return onScroll(handler);
   }, []);
 
   return (

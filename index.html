@@ -133,6 +133,19 @@
      the toolbar, grew this element, grew body, and produced more scrollable
      space under your finger. 100svh is the small viewport and does not
      move. The 100vh line stays as a fallback for browsers without svh. */
+  /* The document is pinned to the viewport and #root does the scrolling, so
+     overscroll-behavior can stop iOS bouncing past the end. iOS honours it on
+     an inner scroller but not on the root one. The trade is that Safari's
+     address bar no longer auto-hides. */
+  html, body { height: 100%; overflow: hidden; }
+  #root {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: clip;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .viewport-tall { min-height: 100vh; min-height: 100svh; }
 
   .mono  { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim); }
