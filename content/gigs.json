@@ -1,6 +1,13 @@
 {
   "items": [
     {
+      "noReservation": true,
+      "highlight": true,
+      "date": "2026-11-07",
+      "venue": "Picerija Don",
+      "time": "21:00"
+    },
+    {
       "date": "2026-04-19",
       "venue": "Jadran",
       "note": "Prvi solistički koncert · SOLD OUT",
