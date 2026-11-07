@@ -219,7 +219,11 @@
 
   /* marquee */
   @keyframes marq { to { transform: translateX(-50%); } }
-  .marquee { overflow: hidden; position: relative; }
+  /* clip-path clips the transform-animated track where overflow:hidden
+     alone does not on iOS Safari. Without it the 5900px-wide track escapes
+     and the document becomes that wide, letting you pan sideways into
+     empty space beside the footer. */
+  .marquee { overflow: hidden; position: relative; clip-path: inset(0); max-width: 100%; }
   .marquee-track { display: flex; gap: 60px; width: max-content; animation: marq 45s linear infinite; }
   .marquee:hover .marquee-track { animation-play-state: paused; }
 
