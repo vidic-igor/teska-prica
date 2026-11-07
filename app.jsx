@@ -308,7 +308,7 @@ function Members({ members }) {
         <div className="grid-members">
           {members.map((m, i) =>
             <article key={i} style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', background: '#111' }}>
-              <img src={m.img} alt={m.name}
+              <img src={m.img} alt={m.name} width="900" height="1200"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(5%) contrast(1.05)', transition: 'transform 0.6s' }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -348,7 +348,7 @@ function Showcase() {
             <a href="#kontakt" className="btn btn-accent">Zakažite termin &nbsp;→</a>
           </div>
           <div className="showcase-photo" style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#111' }}>
-            <img src="img/band-group.jpg" alt="Teška Priča — bend"
+            <img src="img/band-group.jpg" alt="Teška Priča — bend" width="1080" height="1386"
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           </div>
         </div>
@@ -578,7 +578,8 @@ function Gallery({ settings }) {
             <div key={i} className={`gallery-tile ${i === 0 ? 'gallery-tile-wide' : ''}`} style={{ gridColumn: t.span, aspectRatio: t.ar, position: 'relative', overflow: 'hidden', background: '#111' }}>
               {t.video
                 ? <VideoTile src={t.video} poster={t.poster} />
-                : <img src={t.src} alt={`Teška Priča — ${t.label}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s' }}
+                : <img src={t.src} alt={`Teška Priča — ${t.label}`}
+                    width={Number(t.ar.split('/')[0]) * 400} height={Number(t.ar.split('/')[1]) * 400} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s' }}
                     onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
                     onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   />}
@@ -769,14 +770,14 @@ function Footer({ settings }) {
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 'clamp(32px, 6vw, 72px)' }}>
             <a href="https://www.univerexport.rs" target="_blank" rel="noopener noreferrer">
-              <img src="img/partner-univerexport.webp" alt="Univerexport"
+              <img src="img/partner-univerexport.webp" alt="Univerexport" width="480" height="78"
                 style={{ height: 'clamp(28px, 4vw, 44px)', width: 'auto', opacity: 0.7, filter: 'grayscale(100%) brightness(1.1)', transition: 'opacity 0.2s, filter 0.2s' }}
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.filter = 'grayscale(0%)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.filter = 'grayscale(100%) brightness(1.1)'; }}
               />
             </a>
             <a href="https://www.doncaffe.rs/" target="_blank" rel="noopener noreferrer">
-              <img src="img/partner-doncafe.png" alt="Don Café"
+              <img src="img/partner-doncafe.png" alt="Don Café" width="161" height="96"
                 style={{ height: 'clamp(36px, 5vw, 56px)', width: 'auto', opacity: 0.7, filter: 'grayscale(100%) brightness(1.1)', transition: 'opacity 0.2s, filter 0.2s' }}
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.filter = 'grayscale(0%)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.filter = 'grayscale(100%) brightness(1.1)'; }}

@@ -11,6 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { execFileSync } = require('child_process');
 const babel = require('@babel/core');
 const React = require('react');
 const { renderToString } = require('react-dom/server');
@@ -44,6 +45,18 @@ const { code } = babel.transformFileSync(path.join(root, 'app.jsx'), {
   configFile: false,
 });
 fs.writeFileSync(path.join(dist, 'app.js'), code + '\n');
+
+/* Minify the shipped bundle. Run as a child process so build.js stays
+   synchronous; terser's API is promise-based. The prerender below uses the
+   unminified `code` in memory, so it is unaffected either way. */
+const appJsPath = path.join(dist, 'app.js');
+const rawSize = fs.statSync(appJsPath).size;
+execFileSync(
+  process.execPath,
+  [require.resolve('terser/bin/terser'), appJsPath, '--compress', '--mangle', '--output', appJsPath],
+  { stdio: 'inherit' },
+);
+const minSize = fs.statSync(appJsPath).size;
 
 let missing = [];
 for (const name of ASSETS) {
@@ -149,5 +162,5 @@ const count = (function walk(dir) {
 
 console.log(
   `build: dist/ ready (${count} files, ${payload.length} B content inlined, ` +
-  `${prerendered.length} B prerendered)`,
+  `${prerendered.length} B prerendered, app.js ${rawSize} -> ${minSize} B)`,
 );
