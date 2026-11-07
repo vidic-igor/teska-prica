@@ -1,0 +1,17 @@
+{
+  // Serves the built site as a static-asset Worker at
+  // teska-prica.igor-vidic92.workers.dev.
+  //
+  // Cloudflare Workers Builds settings for this repo:
+  //   Build command:  npm run build:cloudflare
+  //   Deploy command: npx wrangler deploy
+  //
+  // The OAuth broker for Decap CMS is a separate Worker; see worker/.
+  "name": "teska-prica",
+  "compatibility_date": "2026-11-07",
+  "assets": {
+    // Only what build.js puts here reaches the public. Pointing this at the
+    // repo root would publish app.jsx, package.json and docs/ as well.
+    "directory": "./dist"
+  }
+}

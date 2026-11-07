@@ -1,3 +1,0 @@
-# Cloudflare Pages redirects. The www -> apex redirect lives in the Cloudflare
-# dashboard as a Redirect Rule, because _redirects cannot match on hostname.
-/admin    /admin/index.html    200
