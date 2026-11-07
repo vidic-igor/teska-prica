@@ -14,8 +14,7 @@ required = ["GITHUB_OAUTH_SECRET"]
 
 [vars]
 # Origins allowed to receive the OAuth token. This is the site the CMS runs on,
-# not this Worker. Add the old *.netlify.app origin too if /admin still needs
-# to work there during the migration.
+# not this Worker. The workers.dev entry can go once nothing points at it.
 SITE_ORIGINS = "https://teskaprica.rs,https://teska-prica.igor-vidic92.workers.dev"
 
 # The repo is public, so public_repo is enough to let the CMS commit.

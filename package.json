@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "babel app.jsx --presets @babel/preset-react -o app.js",
+    "build": "node build.js",
     "build:cloudflare": "node build.js"
   },
   "keywords": [],

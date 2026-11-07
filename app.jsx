@@ -13,13 +13,11 @@ const VENUES = [
 /* ============ APP ============ */
 
 /* build.js inlines the content into index.html, so the first render already
-   has it and the four fetches below never run. The fetch path stays as the
-   fallback for builds that skip the injection, such as Netlify's
-   `npm run build`. */
+   has it and the four fetches below never run. The fetch path stays as a
+   fallback for anything served without the build step. */
 const INLINE_CONTENT = typeof window !== 'undefined' ? window.__CONTENT__ : null;
 
-/* Booking form relay. Netlify Forms only works on Netlify, so submissions go
-   to Web3Forms instead. The access key is a submit-only endpoint id meant to
+/* Booking form relay. The access key is a submit-only endpoint id meant to
    ship in the page, not a secret. */
 const WEB3FORMS_KEY = '80d7bb74-9e68-455b-9bfb-f704db73d96c';
 
@@ -713,8 +711,6 @@ function Booking({ settings }) {
             </div>
           ) : (
           <form onSubmit={submit}>
-            <input type="hidden" name="form-name" value="booking" />
-            <input type="hidden" name="bot-field" />
             <Field label="IME / KONTAKT OSOBA"  v={form.name}    on={(v) => setForm({ ...form, name: v })} />
             <Field label="TELEFON ILI E-MAIL"   v={form.contact} on={(v) => setForm({ ...form, contact: v })} />
             <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, borderBottom: '1px solid var(--line)' }}>
