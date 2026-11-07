@@ -11,11 +11,19 @@ const VENUES = [
 ];
 
 /* ============ APP ============ */
+
+/* build.js inlines the content into index.html, so the first render already
+   has it and the four fetches below never run. The fetch path stays as the
+   fallback for builds that skip the injection, such as Netlify's
+   `npm run build`. */
+const INLINE_CONTENT = typeof window !== 'undefined' ? window.__CONTENT__ : null;
+
 function App() {
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(INLINE_CONTENT || null);
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
+    if (INLINE_CONTENT) return;
     Promise.all([
       fetch('/content/gigs.json').then(r => r.json()),
       fetch('/content/members.json').then(r => r.json()),

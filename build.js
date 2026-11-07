@@ -56,9 +56,38 @@ if (missing.length) {
   process.exit(1);
 }
 
+/*
+ * Inline the content into index.html. Without this the browser waits on
+ * html -> app.js -> four JSON fetches before anything renders, and App()
+ * returns null for the whole of that.
+ */
+const CONTENT_MARKER = '<!--build:content-->';
+const readJson = (rel) => JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
+
+const bundle = {
+  gigs: readJson('content/gigs.json').items,
+  members: readJson('content/members.json').items,
+  settings: readJson('content/settings.json'),
+  venues: readJson('content/venues.json').items,
+};
+
+/* Escaping < stops the payload closing the script element early. */
+const payload = JSON.stringify(bundle).replace(/</g, '\\u003c');
+
+const indexPath = path.join(dist, 'index.html');
+const html = fs.readFileSync(indexPath, 'utf8');
+if (!html.includes(CONTENT_MARKER)) {
+  console.error(`build: ${CONTENT_MARKER} is missing from index.html`);
+  process.exit(1);
+}
+fs.writeFileSync(
+  indexPath,
+  html.replace(CONTENT_MARKER, `<script>window.__CONTENT__=${payload};</script>`),
+);
+
 const count = (function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true })
     .reduce((n, e) => n + (e.isDirectory() ? walk(path.join(dir, e.name)) : 1), 0);
 })(dist);
 
-console.log(`build: dist/ ready (${count} files)`);
+console.log(`build: dist/ ready (${count} files, ${payload.length} B content inlined)`);
