@@ -18,6 +18,11 @@ const VENUES = [
    `npm run build`. */
 const INLINE_CONTENT = typeof window !== 'undefined' ? window.__CONTENT__ : null;
 
+/* Booking form relay. Netlify Forms only works on Netlify, so submissions go
+   to Web3Forms instead. The access key is a submit-only endpoint id meant to
+   ship in the page, not a secret. */
+const WEB3FORMS_KEY = '80d7bb74-9e68-455b-9bfb-f704db73d96c';
+
 function App() {
   const [content, setContent] = useState(INLINE_CONTENT || null);
   const [loadError, setLoadError] = useState(false);
@@ -609,13 +614,29 @@ function Booking({ settings }) {
     e.preventDefault();
     setSending(true);
     setSendError(false);
-    fetch('/', {
+    fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ 'form-name': 'booking', ...form }).toString(),
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject: `Upit za nastup — ${form.name || 'bez imena'}`,
+        from_name: 'Teška Priča — sajt',
+        /* Honeypot. Web3Forms drops the submission if a bot fills this. */
+        botcheck: '',
+        /* Reply straight to the sender when they left an e-mail. */
+        ...(form.contact.includes('@') ? { replyto: form.contact } : {}),
+        /* Keys become the labels in the e-mail, so they are written out. */
+        'Ime / kontakt osoba': form.name,
+        'Telefon ili e-mail': form.contact,
+        'Datum': form.date || '—',
+        'Tip događaja': form.type,
+        'Grad': form.city || '—',
+        'Poruka': form.msg || '—',
+      }),
     })
-      .then(r => {
-        if (!r.ok) throw new Error(r.status);
+      .then(r => r.json())
+      .then(d => {
+        if (!d.success) throw new Error(d.message || 'submit failed');
         setSent(true); setSending(false);
       })
       .catch(() => { setSendError(true); setSending(false); });
