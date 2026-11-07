@@ -10,7 +10,10 @@
  */
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 const babel = require('@babel/core');
+const React = require('react');
+const { renderToString } = require('react-dom/server');
 
 const root = __dirname;
 const dist = path.join(root, 'dist');
@@ -86,9 +89,65 @@ fs.writeFileSync(
   html.replace(CONTENT_MARKER, `<script>window.__CONTENT__=${payload};</script>`),
 );
 
+/*
+ * Prerender the app into #root.
+ *
+ * Without this a crawler that does not run JavaScript sees 49 words, one
+ * paragraph and no external links, because everything visible is built by
+ * React at runtime. Prerendering puts the same markup a visitor sees into
+ * the HTML itself. Nothing is hidden and nothing is duplicated: the client
+ * re-renders over it on load.
+ *
+ * The client keeps using createRoot().render() rather than hydrating. Gigs
+ * work out UPCOMING vs PAST from the current date, so a build-time snapshot
+ * drifts out of date and would not match on hydration. Letting React throw
+ * the snapshot away means crawlers get the build-time view and visitors
+ * always get today's.
+ */
+function prerender(appCode, content) {
+  const sandbox = {
+    React,
+    /* app.js ends by mounting into the DOM. Stub both so that line is inert
+       here; the real mount happens in the browser. */
+    ReactDOM: { createRoot: () => ({ render: () => {} }) },
+    document: { getElementById: () => null },
+    window: { __CONTENT__: content },
+    console,
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(appCode, sandbox, { filename: 'app.js' });
+
+  if (typeof sandbox.App !== 'function') {
+    throw new Error('App was not defined after evaluating app.js');
+  }
+  return renderToString(React.createElement(sandbox.App));
+}
+
+const ROOT_DIV = '<div id="root"></div>';
+let prerendered;
+try {
+  prerendered = prerender(code, bundle);
+} catch (err) {
+  console.error('build: prerender failed -', err.message);
+  process.exit(1);
+}
+
+const withContent = fs.readFileSync(indexPath, 'utf8');
+if (!withContent.includes(ROOT_DIV)) {
+  console.error(`build: ${ROOT_DIV} is missing from index.html`);
+  process.exit(1);
+}
+fs.writeFileSync(
+  indexPath,
+  withContent.replace(ROOT_DIV, `<div id="root">${prerendered}</div>`),
+);
+
 const count = (function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true })
     .reduce((n, e) => n + (e.isDirectory() ? walk(path.join(dir, e.name)) : 1), 0);
 })(dist);
 
-console.log(`build: dist/ ready (${count} files, ${payload.length} B content inlined)`);
+console.log(
+  `build: dist/ ready (${count} files, ${payload.length} B content inlined, ` +
+  `${prerendered.length} B prerendered)`,
+);
