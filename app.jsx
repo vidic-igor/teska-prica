@@ -166,7 +166,7 @@ function Hero() {
             lineHeight: 1.1,
             fontSize: 'clamp(80px, 16vw, 200px)',
           }}>
-            TEŠKA<br />PRIČA
+            TEŠKA{' '}<br />PRIČA
           </h1>
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
@@ -219,7 +219,7 @@ function About({ settings, members }) {
           <div className="sticky-col" style={{ position: 'sticky', top: 120 }}>
             <div className="section-label">01 — Bend</div>
             <h2 style={{ fontSize: 'clamp(48px, 6vw, 96px)', letterSpacing: '-0.01em', marginBottom: 24 }}>
-              Akustični bend<br />koji puni<br /><span style={{ color: 'var(--accent)' }}>prostor.</span>
+              Akustični bend{' '}<br />koji puni{' '}<br /><span style={{ color: 'var(--accent)' }}>prostor.</span>
             </h2>
             <p className="mono">SUBOTICA · SRBIJA · EST. 2024</p>
           </div>
@@ -262,7 +262,7 @@ function Venues() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64, flexWrap: 'wrap', gap: 24 }}>
           <div>
             <div className="section-label">02 — Gde sviramo</div>
-            <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>FORMAT<br />NASTUPA</h2>
+            <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>FORMAT{' '}<br />NASTUPA</h2>
           </div>
           <p style={{ maxWidth: 360, color: 'var(--fg-dim)' }}>
             Sviramo u stalnoj postavi — dva vokala, gitara i bubnjevi.
@@ -337,7 +337,7 @@ function Showcase() {
           <div>
             <div className="mono" style={{ color: 'var(--accent)', marginBottom: 14 }}>AKUSTIČNI SASTAV · SUBOTICA</div>
             <h2 style={{ fontSize: 'clamp(40px, 5vw, 72px)', letterSpacing: '-0.01em', lineHeight: 1.16, marginBottom: 20 }}>
-              Sviraćemo i na<br />vašoj <span style={{ color: 'var(--accent)' }}>proslavi.</span>
+              Sviraćemo i na{' '}<br />vašoj <span style={{ color: 'var(--accent)' }}>proslavi.</span>
             </h2>
             <p className="mono" style={{ maxWidth: 360, lineHeight: 1.8, marginBottom: 36 }}>
               Dva vokala, gitara i bubnjevi.
@@ -659,7 +659,7 @@ function Booking({ settings }) {
       <div className="container">
         <div className="section-label">06 — Kontakt</div>
         <h2 style={{ fontSize: 'clamp(64px, 10vw, 180px)', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 48 }}>
-          ZAKAŽITE<br /><span style={{ color: 'var(--accent)' }}>NASTUP.</span>
+          ZAKAŽITE{' '}<br /><span style={{ color: 'var(--accent)' }}>NASTUP.</span>
         </h2>
 
         <div className="grid-booking">
@@ -694,7 +694,7 @@ function Booking({ settings }) {
               style={{ borderTop: '1px solid var(--line)', paddingTop: 36 }}>
               <div className="mono" style={{ color: 'var(--accent)' }}>UPIT POSLAT ✓</div>
               <h3 style={{ fontSize: 'clamp(34px, 4.4vw, 60px)', lineHeight: 1.04, letterSpacing: '-0.02em', margin: '16px 0 24px' }}>
-                HVALA.<br />JAVLJAMO SE<br />
+                HVALA.{' '}<br />JAVLJAMO SE<br />
                 <span style={{ color: 'var(--accent)' }}>U ROKU OD 24 SATA.</span>
               </h3>
               <p style={{ fontSize: 17, color: 'var(--fg-dim)', lineHeight: 1.55, maxWidth: 420 }}>
