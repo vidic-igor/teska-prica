@@ -335,6 +335,12 @@ if (location.search.indexOf('debug') > -1) {
   addEventListener('load', function () {
     var d = document.documentElement;
 
+    /* Paint the two candidates in unmistakable colours. Whatever fills the
+       gap below the footer identifies itself: lime = the html canvas, so it
+       is iOS overscroll; red = the body box, so body is genuinely too tall. */
+    d.style.setProperty('background', 'lime', 'important');
+    document.body.style.setProperty('background', 'red', 'important');
+
     var mark = document.createElement('div');
     mark.style.cssText = 'height:12px;background:#f0f';
     document.body.appendChild(mark);
