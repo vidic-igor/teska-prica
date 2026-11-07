@@ -119,6 +119,12 @@ function Hero() {
   const bgRef = useRef(null);
   const titleRef = useRef(null);
   useEffect(() => {
+    /* No parallax on phones. It costs a transform and a repaint on every
+       scroll frame for an effect that barely reads on a small screen, and
+       anyone who asked for reduced motion should not get it at all. */
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(max-width: 900px)').matches) return;
+
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
