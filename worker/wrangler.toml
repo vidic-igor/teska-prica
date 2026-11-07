@@ -3,10 +3,10 @@ main = "src/index.js"
 compatibility_date = "2026-11-07"
 
 [vars]
-# Origins allowed to receive the OAuth token. Keep both entries while the site
-# lives on Netlify and is being tested on Cloudflare Pages; drop the pages.dev
-# one once the migration is finished.
-SITE_ORIGINS = "https://teskaprica.rs,https://teska-prica.pages.dev"
+# Origins allowed to receive the OAuth token. This is the site the CMS runs on,
+# not this Worker. Correct it if the Pages project gets a different name, and
+# add the old *.netlify.app origin if /admin still needs to work there.
+SITE_ORIGINS = "https://teska-prica.pages.dev"
 
 # The repo is public, so public_repo is enough to let the CMS commit.
 GITHUB_SCOPE = "public_repo,user"
