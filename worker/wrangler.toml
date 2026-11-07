@@ -2,6 +2,10 @@ name = "teska-prica-auth"
 main = "src/index.js"
 compatibility_date = "2026-11-07"
 
+# Expose the broker on <name>.<subdomain>.workers.dev. Without this the Worker
+# deploys but the workers.dev hostname answers 404.
+workers_dev = true
+
 [vars]
 # Origins allowed to receive the OAuth token. This is the site the CMS runs on,
 # not this Worker. Add the old *.netlify.app origin too if /admin still needs
