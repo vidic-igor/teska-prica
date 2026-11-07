@@ -343,66 +343,6 @@
 <div id="root"></div>
 
 <!--build:content-->
-<!-- Temporary: ?debug=1 adds a live readout and a magenta strip marking the
-     true end of the document. Inert without it. Remove once closed. -->
-<script>
-if (location.search.indexOf('debug') > -1) {
-  addEventListener('load', function () {
-    var d = document.documentElement;
-
-    /* Paint the two candidates in unmistakable colours. Whatever fills the
-       gap below the footer identifies itself: lime = the html canvas, so it
-       is iOS overscroll; red = the body box, so body is genuinely too tall. */
-    d.style.setProperty('background', 'lime', 'important');
-    document.body.style.setProperty('background', 'red', 'important');
-
-    var mark = document.createElement('div');
-    mark.style.cssText = 'height:12px;background:#f0f';
-    document.body.appendChild(mark);
-
-    var panel = document.createElement('div');
-    panel.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font:12px/1.5 monospace;padding:8px;white-space:pre;border-bottom:2px solid #0f0';
-    document.body.appendChild(panel);
-
-    /* The panel scrolls out of view during the drag, so record the extremes
-       and read them afterwards. */
-    var seen = 0, raf = 0, maxBodyH = 0, maxBodyEnds = 0, minInner = 9999, maxInner = 0;
-    setInterval(function () {
-      var r = document.body.getBoundingClientRect();
-      maxBodyH = Math.max(maxBodyH, Math.round(r.height));
-      maxBodyEnds = Math.max(maxBodyEnds, Math.round(r.bottom + window.scrollY));
-      minInner = Math.min(minInner, window.innerHeight);
-      maxInner = Math.max(maxInner, window.innerHeight);
-    }, 60);
-    function render() {
-      raf = 0;
-      var vv = window.visualViewport;
-      seen = Math.max(seen, Math.round(window.scrollY));
-      panel.textContent = [
-        'scrollY ' + Math.round(window.scrollY) + '  maxSeen ' + seen,
-        'limit ' + (d.scrollHeight - d.clientHeight),
-        'vv pageTop ' + (vv ? Math.round(vv.pageTop) : '-') + '  offTop ' + (vv ? Math.round(vv.offsetTop) : '-'),
-        'vv h ' + (vv ? Math.round(vv.height) : '-') + '  innerH ' + window.innerHeight + '  clientH ' + d.clientHeight,
-        'scale ' + (vv ? vv.scale : '-'),
-        'body h ' + Math.round(document.body.getBoundingClientRect().height),
-        'last child ends ' + Math.round(mark.getBoundingClientRect().bottom + window.scrollY),
-        'body ends ' + Math.round(document.body.getBoundingClientRect().bottom + window.scrollY),
-        'body minH ' + getComputedStyle(document.body).minHeight,
-        'MAX bodyH ' + maxBodyH + '  MAX bodyEnds ' + maxBodyEnds,
-        'innerH range ' + minInner + ' - ' + maxInner
-      ].join('\n');
-    }
-    function tick() { if (!raf) raf = requestAnimationFrame(render); }
-    addEventListener('scroll', tick, { passive: true });
-    addEventListener('resize', tick);
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', tick);
-      window.visualViewport.addEventListener('scroll', tick);
-    }
-    render();
-  });
-}
-</script>
 <script defer src="app.js"></script>
 </body>
 </html>
