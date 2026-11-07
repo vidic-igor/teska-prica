@@ -2,12 +2,12 @@ const { useState, useEffect, useRef } = React;
 
 /* ============ STATIC DATA (never needs CMS editing) ============ */
 const VENUES = [
-  { type: "Klubovi",           desc: "Petak i subota veče, rezidencije, posebne večeri." },
-  { type: "Restorani",         desc: "Vikend programi, rezidencije, tematske večeri." },
-  { type: "Hoteli",            desc: "Rezidencije, gala večere, sezonski aranžmani." },
+  { type: "Klubovi",           desc: "Petak i subota veče, posebne večeri." },
+  { type: "Restorani",         desc: "Vikend programi, tematske večeri." },
+  { type: "Hoteli",            desc: "Gala večere, sezonski aranžmani." },
   { type: "Svadbe",            desc: "Ceremonija, koktel, veče — pun program uživo." },
   { type: "Korporativne",      desc: "Dočeci, proslave, team-building događaji." },
-  { type: "Privatne proslave", desc: "Rođendani, jubileji, kamerni događaji." },
+  { type: "Privatne proslave", desc: "Rođendani, jubileji, porodične proslave." },
 ];
 
 /* ============ APP ============ */
@@ -412,7 +412,7 @@ function Gigs({ gigs, settings, venues }) {
             <div className="section-label">04 — Nastupi</div>
             <h2 style={{ fontSize: 'clamp(48px, 7vw, 110px)' }}>RASPORED</h2>
           </div>
-          <p className="mono" style={{ maxWidth: 320 }}>REZIDENCIJE · KONCERTI · DOGAĐAJI</p>
+          <p className="mono" style={{ maxWidth: 320 }}>PROSLAVE · KONCERTI · DOGAĐAJI</p>
         </div>
 
         <div style={{ borderTop: '1px solid var(--line)' }}>
@@ -666,7 +666,7 @@ function Booking({ settings }) {
             <label style={{ display: 'block', padding: '22px 0', borderBottom: '1px solid var(--line)' }}>
               <div className="mono">TIP DOGAĐAJA</div>
               <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} style={INP_STYLE}>
-                {['Klub / Restoran', 'Hotel / Rezidencija', 'Svadba', 'Korporativna proslava', 'Privatni događaj', 'Koncert / Festival', 'Ostalo'].map(o =>
+                {['Klub / Restoran', 'Hotel', 'Svadba', 'Korporativna proslava', 'Privatni događaj', 'Koncert / Festival', 'Ostalo'].map(o =>
                   <option key={o} style={{ background: 'var(--bg-2)' }}>{o}</option>
                 )}
               </select>
