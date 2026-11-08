@@ -2,6 +2,12 @@
   "items": [
     {
       "noReservation": true,
+      "highlight": false,
+      "date": "2026-11-20",
+      "venue": "Barel Pub"
+    },
+    {
+      "noReservation": true,
       "highlight": true,
       "date": "2026-11-07",
       "venue": "Picerija Don",
