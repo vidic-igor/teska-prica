@@ -2,9 +2,10 @@
   "items": [
     {
       "noReservation": true,
-      "highlight": false,
-      "date": "2026-11-20",
-      "venue": "Barel Pub"
+      "highlight": true,
+      "date": "2026-11-15",
+      "venue": "",
+      "place": "Privatna žurka"
     },
     {
       "noReservation": true,
